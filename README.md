@@ -54,7 +54,9 @@ retain its vector shapes and colours while removing editor metadata.
 The stopper DXF uses inches. Its rounded quadrant is converted to millimetres
 at exactly 25.4 mm/in: R53.34, with straight cuts 1.27 mm from each vane axis.
 Four inserts are displayed provisionally; their count and installed height are
-unconfirmed. Pattern registration on the small inserts is illustrative.
+unconfirmed. Each insert now carries one complete blue-and-yellow bullseye at
+its area centroid. This requested layout is available in `stopper-contrast.svg`;
+its 33 mm outer diameter is a visual layout choice, not a measured sticker size.
 The funnel uses the supplied Inventor cone profile: Ø139.7 mm outer rim and
 91.44 mm total height. FreeCAD + InventorLoader STEP conversion produced a valid
 closed 10-face shell. The revolved profile reproduces its volume within 0.01 mm³;
@@ -64,7 +66,11 @@ STL is generated from the validated profile with a fixed anonymous header.
 inferred by touching the taper to the hole's top edge; stopper height is inferred
 from the inside taper. Neither position is a confirmed measurement. Small
 moulded tabs absent from the source CAD are omitted. The crossed vanes remain
-photo-based placeholders pending their own CAD files.
+photo-based estimates pending their own CAD files. The supplied front-view
+reference suggests roughly 155 mm above the rim, 125 mm maximum width and
+45 mm tip width. Those proportions are estimated using the known 139.7 mm rim
+as a scale; perspective and hidden seating prevent a fabrication measurement.
+Model and drawing share the same parameterized silhouette.
 Platform screw count is eight; screw length and the assumed 14122 nut ID need
 confirmation. The combined materials CSV keeps these qualifications alongside
 quantities. The camera-box DXF is archived privately for the next assembly.

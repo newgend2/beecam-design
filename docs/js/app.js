@@ -41,7 +41,7 @@ function selectPart(id){
   $('#detail-title').textContent=p.name;$('#detail-description').textContent=p.note;
   stats([...(p.sku?[['80/20 part',p.sku]]:[]),['Quantity',String(p.qty)],...(p.length?[['Cut length',p.length+' mm'],['Cross section','20 × 20 mm']]:[['Size',p.dims]]),['Basis',p.basis||(p.kind==='extrusion'?'Designer dimensions':'Catalogue; count provisional')]]);
   const source=p.source||(p.sku?sourceURL(p.sku):null);
-  $('#detail-actions').innerHTML='<button id="isolate-part">Isolate part</button><button id="part-drawing">View drawing ↗</button>'+(p.download?`<a class="button" href="${p.download}" download>Download ${p.kind==='graphic'?'pattern SVG':p.download.endsWith('.stl')?'STL':'DXF in mm'} ↓</a>`:'')+(source?`<a class="button" target="_blank" rel="noopener" href="${source}">${p.sku?'80/20 product page':'Blue vane trap source'} ↗</a>`:'');
+  $('#detail-actions').innerHTML='<button id="isolate-part">Isolate part</button><button id="part-drawing">View drawing ↗</button>'+(p.download?`<a class="button" href="${p.download}" download>Download ${p.kind==='graphic'?'pattern SVG':p.download.endsWith('.stl')?'STL':'DXF in mm'} ↓</a>`:'')+(p.id==='pattern'||p.id==='stoppers'?'<a class="button" href="assets/stopper-contrast.svg" download>Stopper sticker SVG ↓</a>':'')+(source?`<a class="button" target="_blank" rel="noopener" href="${source}">${p.sku?'80/20 product page':'Blue vane trap source'} ↗</a>`:'');
   $('#isolate-part').onclick=()=>{setView('explore');$('#isolate-part').textContent=viewer?.isolate()?'Show assembly':'Isolate part';};
   $('#part-drawing').onclick=()=>showDrawing(p.id);
 }

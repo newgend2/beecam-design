@@ -1,5 +1,7 @@
 import * as THREE from '../vendor/three.module.js';
 import geometry from './platform-geometry.js';
+import {platformParameters as P} from './data.js';
+import cone from './cone-geometry.js';
 
 export function panelShape(rear) {
   const {center:[cx,cy],radius:r}=geometry.platform.opening;
@@ -25,4 +27,19 @@ export function patternUV(geometry,width=420,height=300,offset=[0,0]){
   const p=geometry.attributes.position,uv=[];
   for(let i=0;i<p.count;i++)uv.push((p.getX(i)+offset[0])/width,(p.getY(i)+offset[1])/height);
   geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));return geometry;
+}
+
+// A photo-estimated silhouette, parameterized so the model and drawing agree.
+export function vaneOutline(){
+  const rim=P.coneBaseY+cone.height-P.stopperBaseYIllustrative;
+  const half=P.vaneWidthIllustrative/2,tip=P.vaneTipWidthIllustrative/2;
+  return [[-52,0],[52,0],[half,rim],[half,rim+P.vaneShoulderAboveRimIllustrative],[tip,P.vaneHeightIllustrative],[-tip,P.vaneHeightIllustrative],[-half,rim+P.vaneShoulderAboveRimIllustrative],[-half,rim]];
+}
+export function stopperCentroid(){
+  const pts=stopperShape().getPoints(512);let cross=0,x=0,y=0;
+  for(let i=0;i<pts.length;i++){
+    const a=pts[i],b=pts[(i+1)%pts.length],v=a.x*b.y-b.x*a.y;
+    cross+=v;x+=(a.x+b.x)*v;y+=(a.y+b.y)*v;
+  }
+  return [x/(3*cross),y/(3*cross)];
 }
