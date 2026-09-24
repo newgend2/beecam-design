@@ -4,6 +4,10 @@ A static assembly explorer for an open camera-trap design. This first revision
 documents the aluminum frame. The imaging platform, weatherproof enclosure,
 and acrylic electronics mount will be added as separate assemblies.
 
+**Viewer:** https://newgend2.github.io/beecam-design/
+
+**Source:** https://github.com/newgend2/beecam-design
+
 ## Preview
 
 Serve `docs/` with a local HTTP server, for example:
