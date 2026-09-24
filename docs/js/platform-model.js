@@ -12,6 +12,9 @@ export function addPlatform({partGroup,mesh,bolt,addLabel}){
   const acrylic=new THREE.MeshStandardMaterial({color:0xc3e9ed,metalness:0,roughness:.25,transparent:true,opacity:.53,depthWrite:false,side:THREE.DoubleSide});
   const print=new THREE.MeshBasicMaterial({map:texture,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
   const stopperPrint=print.clone();stopperPrint.map=stopperTexture;
+  // Stopper graphics already sit above the acrylic. Slope-based depth bias
+  // pulls them through the enclosing blue walls at grazing viewing angles.
+  stopperPrint.polygonOffset=false;
   const blue=new THREE.MeshStandardMaterial({color:0x1745d3,metalness:0,roughness:.38,side:THREE.DoubleSide});
   const patternSurfaces=[];
   function surface(s,g,offset=[0,0],width=420,height=300,material=print){
