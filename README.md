@@ -1,7 +1,8 @@
 # BeeCam design
 
-A static assembly explorer for an open camera-trap design. The viewer documents the aluminum frame and imaging platform. The weatherproof
-enclosure and acrylic electronics mount will be added as separate assemblies.
+A static assembly explorer for an open camera-trap design. The viewer documents
+the aluminum frame, imaging platform, weatherproof enclosure, internal acrylic
+plate and Raspberry Pi AI Camera. Other electronics are planned for the next pass.
 
 **Viewer:** https://newgend2.github.io/beecam-design/
 
@@ -73,11 +74,45 @@ as a scale; perspective and hidden seating prevent a fabrication measurement.
 Model and drawing share the same parameterized silhouette.
 Platform screw count is eight; screw length and the assumed 14122 nut ID need
 confirmation. The combined materials CSV keeps these qualifications alongside
-quantities. The camera-box DXF is archived privately for the next assembly.
+quantities.
 
 Source files remain unchanged in ignored private storage. Only reconstructed
 geometry-only DXFs, explicit dimension data and sanitized SVG artwork are
 published. The DXF educational notice is retained in the normalized exports.
+
+## Enclosure and camera
+
+The linked Zulkit enclosure has a nominal 150 × 150 × 90 mm envelope. Its lid
+faces down toward the trap. The supplied outer mounting-plate DXF is 135 × 170 mm
+with six Ø5.5 mm holes: four on a 117 × 116 mm rectangle for the included enclosure
+screws, and two 154 mm apart for the usual 80/20 M5 screws and nuts. Both enclosure
+acrylic plates are confirmed as 3 mm thick. The lens is confirmed directly above
+the vane centre; this places the box centre at Z123.968 in the frame coordinate
+system. The box still inherits the unconfirmed upper-arm height.
+
+The internal plate DXF uses inches. Conversion by 25.4 retains its rounded
+128.4986 mm square outline, thirteen circular holes and three rectangular cutouts.
+The camera mount has four Ø2 mm holes on a 21 × 12.5 mm pattern. In the original
+centred CAD coordinates, the inner pair midpoint is (0, 41.032019625). This is
+the specified optical-axis datum, not the centre of the rectangular cutout.
+The cable-clearance hole centre is (37.3253, -37.3253), diameter 31.75 mm.
+Both corresponding lid ports are **22 mm diameter**, as specified by the designer.
+The plate is centred in the lid based on the photos; confirm registration before
+using the derived exterior-face coordinates to drill a physical enclosure.
+
+The right body wall has a centred Ø28 mm through-hole for the capped PATIKIL
+bulkhead. The linked fitting lists a 27 mm male thread but inconsistent overall
+dimensions, so its cap, flange and projection remain schematic. One supplied
+enclosure gland is used in the lid. The lid and supplied gland/screws are listed
+as included parts to avoid counting a second purchased enclosure.
+
+Internals mode hides the frame/platform and opens the lid; the plate, camera,
+gland and camera fasteners move with it. The open angle is a display choice,
+not a claimed hinge limit. Shell walls, taper, mouldings, gland detail, support
+pads, camera spacers and internal installed heights remain illustrative. The
+camera uses the official 25 × 24 × 11.9 mm module envelope with simplified
+component geometry. Other control/power boards are intentionally deferred at the
+designer's request. Source photos are not published.
 
 ## Sources
 
@@ -90,6 +125,9 @@ checked 23 September 2026 against:
 - https://8020.net/20-4167.html
 - https://8020.net/11-5308.html
 - https://8020.net/14122.html
+- https://www.amazon.com/dp/B08KWD8TFY (Zulkit enclosure)
+- https://www.amazon.com/dp/B0DHLLMRRK (PATIKIL capped bulkhead)
+- https://www.raspberrypi.com/products/ai-camera/ (camera envelope)
 
 Original photographs and native CAD files are not published or modified. Drawings are original
 schematics derived from dimensions, not redistributed manufacturer drawings.
@@ -99,14 +137,21 @@ schematics derived from dimensions, not redistributed manufacturer drawings.
 ```sh
 # Import supplied DXF/SVG geometry when sources change:
 python3 scripts/import-platform.py /path/to/source-folder
+# Requires ezdxf; raw enclosure DXFs are archived privately:
+python3 scripts/import-enclosure.py /path/to/source-folder
 node scripts/generate-drawings.mjs
 node scripts/generate-platform-drawings.mjs
+node scripts/generate-enclosure-drawings.mjs
 node tests/data-checks.mjs
+node tests/enclosure-checks.mjs
 python3 scripts/audit-public.py
 ```
 
 Drawings and exports are generated from the shared data. Commit updated outputs
 after changing dimensions. UI tests use Playwright when available.
+`tests/enclosure-checks.mjs` checks the imported plate area, real port cutouts,
+camera alignment and rigid lid motion. `tests/stopper-occlusion.mjs` protects
+the earlier side-view sticker occlusion fix.
 
 ## GitHub Pages
 

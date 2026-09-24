@@ -1,5 +1,6 @@
 import C from './cone-geometry.js';
 import G from './platform-geometry.js';
+import E from './enclosure-geometry.js';
 // Dimensions are millimetres. User measurements and photo inferences stay separate.
 export const parameters = {
   profile: 20,
@@ -60,6 +61,31 @@ export const platformParts = [
   {id:'platformScrews',code:'P7',name:'Platform screws',qty:8,kind:'hardware',dims:'M5 · length to confirm',basis:'Eight DXF mounting holes',note:'One screw per Ø5.5 mm platform hole. Screw length has not been specified for the 3 mm acrylic panels. Eight screws are shown schematically; confirm length and thread engagement before ordering.'},
   {id:'platformNuts',code:'P8',name:'Platform slide-in nuts',sku:'14122',qty:8,kind:'hardware',dims:'M5 · 20 series',basis:'Frame hardware inferred',note:'Eight slide-in nuts, one per platform screw. The viewer uses the same 14122 M5 nut as the frame; verify this part ID for the platform hardware.'},
 ];
-export const parts = [...frameParts.map(p=>({...p,assembly:'frame'})),...platformParts.map(p=>({...p,assembly:'platform'}))];
+export const enclosureParameters = {
+  width:150, depth:150, height:90, bodyWidthIllustrative:135,
+  mountThickness:3, internalThickness:3,
+  // Designer confirmed optical axis directly above the trap centre.
+  centerZ:165-E.lidPorts.camera.center[1],
+  mountTopY:parameters.stem-parameters.upperArmTopGap-20,
+  wallIllustrative:3, lidDepthIllustrative:12,
+  internalStandOffIllustrative:3, cameraStandOffIllustrative:2,
+  sidePortDiameter:28,
+};
+export const enclosureParts = [
+  {id:'boxBody',code:'B1',name:'Enclosure body',qty:1,kind:'purchased',dims:'150 × 150 × 90 mm overall',basis:'Product envelope + designer ports',source:'https://www.amazon.com/dp/B08KWD8TFY',note:'Zulkit hinged ABS enclosure, supplied with lid, mounting screws and cable glands. Overall envelope from the linked product listing. The top hangs below the arm via the external acrylic plate. Right-side Ø28 mm cable-access hole is centred in the body wall. Wall thickness, taper, corner mouldings and hinge/latch geometry are simplified; the 3D model is a reference, not manufacturer CAD.'},
+  {id:'boxLid',code:'B2',name:'Drilled enclosure lid',qty:1,kind:'included',dims:'2 × Ø22 mm added ports',basis:'Designer diameters + DXF centres',note:'Included with B1, not an additional enclosure. Faces down toward the imaging platform. The camera hole follows the midpoint of the internal plate’s inner camera-hole pair; the other port shares the large acrylic clearance-hole centre. Lid shape and depth are schematic. Open the lid to inspect the removable internal plate.'},
+  {id:'boxMount',code:'B3',name:'Outer acrylic mounting plate',qty:1,kind:'acrylic',dims:'135 × 170 × 3 mm',basis:'Supplied DXF + confirmed thickness',download:'downloads/mount-plate-mm.dxf',note:'Exact rounded outline and six Ø5.5 mm holes from the supplied DXF. Four enclosure screws use the 117 × 116 mm pattern. Two arm fasteners use the central holes, 154 mm apart. The 3 mm plate sits against the underside of the 220 mm extrusion.'},
+  {id:'lidGland',code:'B4',name:'Lid cable gland',qty:1,kind:'included',dims:'Ø22 mm lid port',basis:'Supplied with enclosure · shape schematic',source:'https://www.amazon.com/dp/B08KWD8TFY',note:'One of the glands supplied with B1. Fits the designer’s Ø22 mm lid hole at the centre of the internal plate’s Ø31.75 mm clearance opening. Nut, seal and compression cap are illustrative; dimensions of the gland itself are not confirmed.'},
+  {id:'sideBulkhead',code:'B5',name:'Capped side bulkhead',qty:1,kind:'purchased',dims:'Ø28 mm wall hole · 27 mm thread',basis:'Designer hole + linked product',source:'https://www.amazon.com/dp/B0DHLLMRRK',note:'PATIKIL PVC bulkhead with screw-on cap, NPT 1/2-inch female × GHT 3/4-inch male. One fitting used; the linked product is a six-pack. Centred on the right body wall in a Ø28 mm hole. Thread diameter listed as 27 mm; cap, flange and projection are schematic because the listing gives conflicting overall sizes.'},
+  {id:'boxScrews',code:'B6',name:'Supplied enclosure screws',qty:4,kind:'hardware',dims:'Size supplied with box',basis:'Designer count · size unconfirmed',note:'Four larger screws provided with the enclosure secure the external acrylic to its back. Located from the mounting-plate DXF. Heads and thread engagement are schematic; do not substitute the M5 extrusion screws.'},
+  {id:'boxArmScrews',code:'B7',name:'Arm mounting screws',sku:'11-5308',qty:2,kind:'hardware',dims:'M5 × 8 mm',basis:'Designer specified frame hardware',note:'Two usual 80/20 screws through the acrylic tabs into the underside of the 220 mm arm. The DXF hole spacing is 154 mm. Confirm engagement through the 3 mm acrylic before assembly.'},
+  {id:'boxArmNuts',code:'B8',name:'Arm slide-in nuts',sku:'14122',qty:2,kind:'hardware',dims:'M5 · 20 series',basis:'Designer specified frame hardware',note:'Two slide-in nuts inside the lower extrusion slot, one for each mounting-plate tab.'},
+];
+export const internalParts = [
+  {id:'piPlate',code:'E1',name:'Internal acrylic Pi plate',qty:1,kind:'acrylic',dims:'128.499 × 128.499 × 3 mm',basis:'Supplied DXF + confirmed thickness',download:'downloads/internal-plate-mm.dxf',note:'Exact supplied outline, thirteen circular holes and three rectangular cutouts, converted from inches at 25.4 mm/in. Large clearance hole is Ø31.75 mm. Camera mounting holes are Ø2 mm on a 21 × 12.5 mm pattern. The plate is shown centred in the lid, supported above it by photo-inferred hook-and-loop pads; installed spacing and retaining details remain provisional.'},
+  {id:'aiCamera',code:'E2',name:'Raspberry Pi AI Camera',qty:1,kind:'purchased',dims:'25 × 24 × 11.9 mm module',basis:'Official module envelope · schematic detail',source:'https://www.raspberrypi.com/products/ai-camera/',note:'Lens faces down through the lid and directly over the vane centre, as confirmed by the designer. Module envelope comes from Raspberry Pi; mounting position comes from the supplied acrylic DXF. Board components, lens body and mounting spacers are simplified. Other control and power electronics will be added in the next pass.'},
+  {id:'cameraScrews',code:'E3',name:'Camera mounting hardware',qty:4,kind:'hardware',dims:'4 mounting points · size to confirm',basis:'Four DXF camera holes',note:'Four screw/spacer locations are shown at the camera plate holes. Screw specification, spacers and installed height require confirmation; the displayed fasteners are schematic.'},
+];
+export const parts = [...frameParts.map(p=>({...p,assembly:'frame'})),...platformParts.map(p=>({...p,assembly:'platform'})),...enclosureParts.map(p=>({...p,assembly:'enclosure'})),...internalParts.map(p=>({...p,assembly:'internals'}))];
 export const totalLength = frameParts.filter(p=>p.kind==='extrusion').reduce((sum,p)=>sum+p.length*p.qty,0);
 export const sourceURL = sku => `https://8020.net/${sku}.html`;

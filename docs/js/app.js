@@ -1,9 +1,11 @@
 import {parts,totalLength,sourceURL} from './data.js';
 import {createViewer} from './model.js';
 const $=s=>document.querySelector(s);
-let viewer=null,selected=null,assembly='platform';
-const names={frame:'Aluminum frame',platform:'Imaging platform'};
-const drawingFile=p=>p.id==='pattern'?'assets/contrast-pattern.svg':`drawings/${p.id==='platformNuts'?'nut':p.id}.svg`;
+let viewer=null,selected=null,assembly='enclosure',inside=false;
+const names={frame:'Aluminum frame',platform:'Imaging platform',enclosure:'Weatherproof box',internals:'Acrylic + camera'};
+const order={frame:'01',platform:'02',enclosure:'03',internals:'04'};
+const drawingFile=p=>p.id==='pattern'?'assets/contrast-pattern.svg':`drawings/${({platformNuts:'nut',boxArmNuts:'nut',boxArmScrews:'screw'}[p.id]||p.id)}.svg`;
+const drawingAssembly={frame:'assembly',platform:'platformAssembly',enclosure:'enclosureAssembly',internals:'internalsAssembly'};
 function stats(rows){$('#detail-stats').innerHTML=rows.map(([k,v])=>`<div class="stat-row"><span>${k}</span><strong>${v}</strong></div>`).join('');}
 function setView(view){
   document.querySelectorAll('[data-view]').forEach(b=>{const active=b.dataset.view===view;b.classList.toggle('active',active);b.setAttribute('aria-pressed',active);});
@@ -12,67 +14,73 @@ function setView(view){
 function showDrawing(id){setView('drawings');requestAnimationFrame(()=>document.getElementById(`drawing-${id}`)?.scrollIntoView({behavior:'smooth',block:'center'}));}
 function selectAssembly(id){
   assembly=id;selected=null;viewer?.select(null);viewer?.setLabelScope(id);
-  for(const a of ['frame','platform']){
-    const active=id===a,button=$(`#select-${a}`);button.classList.toggle('selected',active);button.setAttribute('aria-expanded',active);
-    $(a==='frame'?'#parts-list':'#platform-parts-list').hidden=!active;
-  }
-  $('#viewer-eyebrow').textContent=id==='frame'?'01 / ALUMINUM FRAME':'02 / IMAGING PLATFORM';
+  document.querySelectorAll('[data-assembly-select]').forEach(button=>{const active=button.dataset.assemblySelect===id;button.classList.toggle('selected',active);button.setAttribute('aria-expanded',active);button.nextElementSibling.hidden=!active;});
+  $('#viewer-eyebrow').textContent=`${inside?'INTERNALS':order[id]} / ${names[id].toUpperCase()}`;
   selectPart(null);
 }
 function selectPart(id){
   const p=parts.find(p=>p.id===id);
+  if(p?.assembly==='internals'&&!inside)setScope(true);
   if(p&&p.assembly!==assembly)selectAssembly(p.assembly);
   selected=id;viewer?.select(id);
   if(p){$(`#${p.assembly}-toggle`).checked=true;viewer?.setAssembly(p.assembly,true);}
   document.querySelectorAll('.part-button').forEach(b=>{const active=b.dataset.part===id;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',active);});
   if(!p){
     $('#detail-eyebrow').textContent='ASSEMBLY DETAILS';$('#detail-title').textContent=names[assembly];
-    if(assembly==='frame'){
-      $('#detail-description').textContent='The structural skeleton: one vertical stem, a U-shaped platform support, and an upper mounting arm.';
-      stats([['Stem height','570 mm'],['Platform width','420 mm'],['Cut members','6'],['Net extrusion',`${totalLength.toLocaleString()} mm`],['Profile','20 × 20 mm']]);
-    }else{
-      $('#detail-description').textContent='Two acrylic panels close around the blue trap. Patterned inserts inside the crossed vanes stop insects falling through the funnel.';
-      stats([['Footprint','420 × 300 mm'],['Acrylic thickness','3 mm · confirmed'],['Trap opening','Ø91.39 mm'],['Mounting holes','8 × Ø5.5 mm'],['Stopper radius','53.34 mm'],['Funnel profile','Supplied CAD']]);
-    }
-    $('#detail-actions').innerHTML=`<button id="part-drawing">View ${assembly} drawing ↗</button>`;
-    $('#part-drawing').onclick=()=>showDrawing(assembly==='frame'?'assembly':'platformAssembly');return;
+    const details={
+      frame:['The structural skeleton: one vertical stem, a U-shaped platform support, and an upper mounting arm.',[['Stem height','570 mm'],['Platform width','420 mm'],['Cut members','6'],['Net extrusion',`${totalLength.toLocaleString()} mm`],['Profile','20 × 20 mm']]],
+      platform:['Two acrylic panels close around the blue trap. Patterned inserts inside the crossed vanes stop insects falling through the funnel.',[['Footprint','420 × 300 mm'],['Acrylic thickness','3 mm · confirmed'],['Trap opening','Ø91.39 mm'],['Mounting holes','8 × Ø5.5 mm'],['Stopper radius','53.34 mm'],['Funnel profile','Supplied CAD']]],
+      enclosure:['The box hangs beneath the upper arm, with its lens facing the vane. Open the lid to inspect the acrylic plate and camera.',[['Overall envelope','150 × 150 × 90 mm'],['Mounting plate','135 × 170 × 3 mm'],['Lid ports','2 × Ø22 mm'],['Right-side port','Ø28 mm'],['Lens alignment','Over vane · confirmed']]],
+      internals:['The removable acrylic plate follows the supplied DXF. Its camera mount locates the optical axis and lid opening. Other electronics will be documented in the next pass.',[['Plate size','128.499 mm square'],['Acrylic thickness','3 mm · confirmed'],['Cable clearance','Ø31.75 mm'],['Camera hole pitch','21 × 12.5 mm'],['Lid spacing','Photo estimate']]],
+    };
+    $('#detail-description').textContent=details[assembly][0];stats(details[assembly][1]);
+    $('#detail-actions').innerHTML=`<button id="part-drawing">View assembly drawing ↗</button>`+(assembly==='enclosure'?'<button id="explore-internals">Explore internals</button>':'');
+    $('#part-drawing').onclick=()=>showDrawing(drawingAssembly[assembly]);
+    if($('#explore-internals'))$('#explore-internals').onclick=()=>{setView('explore');setScope(true);};
+    return;
   }
   $('#detail-eyebrow').textContent=`${p.code} / ${p.assembly.toUpperCase()}`;
   $('#detail-title').textContent=p.name;$('#detail-description').textContent=p.note;
   stats([...(p.sku?[['80/20 part',p.sku]]:[]),['Quantity',String(p.qty)],...(p.length?[['Cut length',p.length+' mm'],['Cross section','20 × 20 mm']]:[['Size',p.dims]]),['Basis',p.basis||(p.kind==='extrusion'?'Designer dimensions':'Catalogue; count provisional')]]);
   const source=p.source||(p.sku?sourceURL(p.sku):null);
-  $('#detail-actions').innerHTML='<button id="isolate-part">Isolate part</button><button id="part-drawing">View drawing ↗</button>'+(p.download?`<a class="button" href="${p.download}" download>Download ${p.kind==='graphic'?'pattern SVG':p.download.endsWith('.stl')?'STL':'DXF in mm'} ↓</a>`:'')+(p.id==='pattern'||p.id==='stoppers'?'<a class="button" href="assets/stopper-contrast.svg" download>Stopper sticker SVG ↓</a>':'')+(source?`<a class="button" target="_blank" rel="noopener" href="${source}">${p.sku?'80/20 product page':'Blue vane trap source'} ↗</a>`:'');
+  $('#detail-actions').innerHTML='<button id="isolate-part">Isolate part</button><button id="part-drawing">View drawing ↗</button>'+(p.download?`<a class="button" href="${p.download}" download>Download ${p.kind==='graphic'?'pattern SVG':p.download.endsWith('.stl')?'STL':'DXF in mm'} ↓</a>`:'')+(p.id==='pattern'||p.id==='stoppers'?'<a class="button" href="assets/stopper-contrast.svg" download>Stopper sticker SVG ↓</a>':'')+(source?`<a class="button" target="_blank" rel="noopener" href="${source}">${p.sku?'80/20 product page':'Product source'} ↗</a>`:'');
   $('#isolate-part').onclick=()=>{setView('explore');$('#isolate-part').textContent=viewer?.isolate()?'Show assembly':'Isolate part';};
   $('#part-drawing').onclick=()=>showDrawing(p.id);
 }
-const shortName=p=>({largeBracket:'Corner brackets',smallBracket:'Compact bracket',plate:'Joining plate',screw:'Screws',nut:'T-nuts',rearPanel:'Rear panel',frontPanel:'Front panel',vaneFunnel:'Funnel & collar',crossVanes:'Blue vanes',stoppers:'Stopper inserts',pattern:'Sticker pattern',platformScrews:'Mounting screws',platformNuts:'Slide-in nuts'}[p.id]||p.name.replace(' platform','').replace(' mounting','').replace(' parallel',''));
-for(const a of ['frame','platform']){
-  $(a==='frame'?'#parts-list':'#platform-parts-list').innerHTML=parts.filter(p=>p.assembly===a).map(p=>`<button class="part-button" data-part="${p.id}" aria-pressed="false"><span class="part-code">${p.code}</span><span>${shortName(p)}</span>${p.length?`<span class="length">${p.length}</span>`:''}</button>`).join('');
-  $(`#select-${a}`).onclick=()=>selectAssembly(a);
-  $(`#${a}-toggle`).onchange=e=>viewer?.setAssembly(a,e.target.checked);
+const shortName=p=>({largeBracket:'Corner brackets',smallBracket:'Compact bracket',plate:'Joining plate',screw:'Screws',nut:'T-nuts',rearPanel:'Rear panel',frontPanel:'Front panel',vaneFunnel:'Funnel & collar',crossVanes:'Blue vanes',stoppers:'Stopper inserts',pattern:'Sticker pattern',platformScrews:'Mounting screws',platformNuts:'Slide-in nuts',boxBody:'Body',boxLid:'Drilled lid',boxMount:'Mounting plate',lidGland:'Cable gland',sideBulkhead:'Capped bulkhead',boxScrews:'Box screws',boxArmScrews:'Arm screws',boxArmNuts:'Arm T-nuts',piPlate:'Acrylic Pi plate',aiCamera:'AI Camera',cameraScrews:'Camera hardware'}[p.id]||p.name.replace(' platform','').replace(' mounting','').replace(' parallel',''));
+for(const button of document.querySelectorAll('[data-assembly-select]')){
+  const a=button.dataset.assemblySelect;
+  button.nextElementSibling.innerHTML=parts.filter(p=>p.assembly===a).map(p=>`<button class="part-button" data-part="${p.id}" aria-pressed="false"><span class="part-code">${p.code}</span><span>${shortName(p)}</span>${p.length?`<span class="length">${p.length}</span>`:''}</button>`).join('');
+  button.onclick=()=>selectAssembly(a);
 }
+for(const a of Object.keys(names))$(`#${a}-toggle`).onchange=e=>viewer?.setAssembly(a,e.target.checked);
 document.querySelectorAll('[data-part]').forEach(b=>b.onclick=()=>selectPart(b.dataset.part));
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
 $('#whole-scope').onclick=()=>setScope(false);$('#inside-scope').onclick=()=>setScope(true);
-function setScope(inside){
-  $('#inside-tree').hidden=!inside;$('#whole-tree').hidden=inside;
+function setScope(value){
+  inside=value;$('#inside-tree').hidden=!inside;$('#whole-tree').hidden=inside;
   for(const [id,active]of [['inside-scope',inside],['whole-scope',!inside]]){const b=$('#'+id);b.classList.toggle('active',active);b.setAttribute('aria-pressed',active);}
-  if(inside){$('#detail-eyebrow').textContent='INTERNALS / NEXT ASSEMBLY';$('#detail-title').textContent='Inside the enclosure';$('#detail-description').textContent='The weatherproof box and acrylic electronics mount will be documented next. The frame and platform remain visible for context.';stats([]);$('#detail-actions').innerHTML='';}else selectPart(selected);
+  $('#frame-toggle').parentElement.hidden=inside;$('#platform-toggle').parentElement.hidden=inside;$('#pattern-toggle').parentElement.hidden=inside;
+  viewer?.setScope(inside);$('#lid-toggle').checked=inside;
+  if(inside)for(const a of ['enclosure','internals']){$(`#${a}-toggle`).checked=true;viewer?.setAssembly(a,true);}
+  $('[data-camera="iso"]').click();selectAssembly(inside?'internals':'enclosure');
 }
 try{viewer=createViewer($('#canvas-host'),$('#part-labels'),selectPart);window.beecamViewer=viewer;}catch(error){console.error(error);$('#viewer-error').hidden=false;$('#hardware-toggle').disabled=true;$('#explode').disabled=true;}
 $('#labels-toggle').onchange=e=>viewer?.setLabels(e.target.checked);
 $('#hardware-toggle').onchange=e=>viewer?.setHardware(e.target.checked);
 $('#pattern-toggle').onchange=e=>viewer?.setPattern(e.target.checked);
+$('#lid-toggle').onchange=e=>viewer?.setLid(e.target.checked);
 $('#explode').oninput=e=>{viewer?.setExplode(Number(e.target.value)/100);$('#explode-value').value=e.target.value+'%';};
 document.querySelectorAll('[data-camera]').forEach(b=>b.onclick=()=>{viewer?.setCamera(b.dataset.camera);document.querySelectorAll('[data-camera]').forEach(x=>{const active=x===b;x.classList.toggle('active',active);x.setAttribute('aria-pressed',active);});});
 $('#reset-view').onclick=()=>{
   viewer?.reset();$('#explode').value=0;$('#explode-value').value='0%';viewer?.setExplode(0);
-  for(const a of ['frame','platform']){$(`#${a}-toggle`).checked=true;viewer?.setAssembly(a,true);}
+  for(const a of Object.keys(names)){$(`#${a}-toggle`).checked=true;viewer?.setAssembly(a,true);}
   $('#hardware-toggle').checked=true;viewer?.setHardware(true);$('#labels-toggle').checked=true;viewer?.setLabels(true);$('#pattern-toggle').checked=true;viewer?.setPattern(true);
-  $('[data-camera="iso"]').click();selectAssembly('platform');
+  setScope(inside);
 };
 $('#fallback-drawings').onclick=()=>setView('drawings');$('#print-drawings').onclick=()=>window.print();
-$('#bom-body').innerHTML=parts.map(p=>`<tr><td>${p.code}</td><td>${p.name}</td><td>${p.sku?`<a href="${sourceURL(p.sku)}" target="_blank" rel="noopener">${p.sku} ↗</a>`:p.download?`<a href="${p.download}" download>${p.kind==='graphic'?'SVG':'CAD'} ↓</a>`:p.kind==='purchased'?'Blue trap':'To confirm'}</td><td>${p.length?p.length+' mm':p.dims}</td><td>${p.qty}</td><td>${p.basis||(p.kind==='extrusion'?'Supplied':'Provisional')}</td></tr>`).join('');
-const drawingParts=[{id:'platformAssembly',code:'02',name:'Imaging platform layout',note:'DXF plan geometry, opening, stepped seam and bolt-hole positions. Acrylic panels and inserts are 3 mm thick.'},...parts.filter(p=>p.assembly==='platform'),{id:'assembly',code:'01',name:'Frame assembly',note:'Front, side and plan views. The dashed upper-arm location is provisional.'},...parts.filter(p=>p.assembly==='frame')];
+$('#bom-body').innerHTML=parts.map(p=>`<tr><td>${p.code}</td><td>${p.name}</td><td>${p.sku?`<a href="${sourceURL(p.sku)}" target="_blank" rel="noopener">${p.sku} ↗</a>`:p.download?`<a href="${p.download}" download>${p.kind==='graphic'?'SVG':'CAD'} ↓</a>`:p.source?`<a href="${p.source}" target="_blank" rel="noopener">Product ↗</a>`:p.kind==='included'?'Included with B1':'To confirm'}</td><td>${p.length?p.length+' mm':p.dims}</td><td>${p.qty}</td><td>${p.basis||(p.kind==='extrusion'?'Supplied':'Provisional')}</td></tr>`).join('');
+$('[data-view="materials"] span').textContent=parts.length;
+const drawingParts=Object.keys(names).flatMap(a=>[{id:drawingAssembly[a],code:order[a],name:names[a]+' layout',note:a==='enclosure'?'Lid ports follow the internal plate datums. Shell mouldings and wall thickness are schematic.':a==='internals'?'Exact acrylic plan with camera-hole and cable-hole coordinates; installed spacing remains provisional.':a==='frame'?'Front, side and plan views. The dashed upper-arm location is provisional.':'DXF plan geometry, opening, stepped seam and bolt-hole positions.'},...parts.filter(p=>p.assembly===a)]);
 $('#drawing-grid').innerHTML=drawingParts.map(p=>`<article class="drawing-card" id="drawing-${p.id}"><figure><img src="${drawingFile(p)}" alt="Reference drawing: ${p.name}" loading="lazy"><figcaption><span>${p.code} · ${p.name}</span><a href="${drawingFile(p)}" download>SVG ↓</a></figcaption></figure><p>${p.note}${p.download&&p.kind!=='graphic'?` <a href="${p.download}" download>Download CAD</a>`:''}</p></article>`).join('');
-selectAssembly('platform');
+selectAssembly('enclosure');

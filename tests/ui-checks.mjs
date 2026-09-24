@@ -10,7 +10,9 @@ const failures=[];page.on('pageerror',e=>failures.push(e.message));page.on('resp
 await mkdir(new URL('../private/',import.meta.url),{recursive:true});
 try{
   await page.goto(url);await page.waitForFunction(()=>window.beecamViewer);
-  assert.deepEqual(await page.evaluate(()=>window.beecamViewer.inspect()),{members:6,brackets:5,screws:22,nuts:22,platformScrews:8,platformNuts:8,panels:2,stoppers:4,assemblies:{frame:true,platform:true},pattern:true,selected:null,explode:0,hardware:true});
+  const initial=await page.evaluate(()=>window.beecamViewer.inspect());
+  assert.deepEqual(Object.fromEntries(['members','brackets','screws','nuts','platformScrews','platformNuts','panels','stoppers'].map(k=>[k,initial[k]])),{members:6,brackets:5,screws:22,nuts:22,platformScrews:8,platformNuts:8,panels:2,stoppers:4});
+  assert.equal(initial.enclosure.lensZ,165);assert.equal(initial.enclosure.open,false);assert.equal(initial.inside,false);
   await page.screenshot({path:new URL('../private/desktop.png',import.meta.url).pathname,fullPage:true});
   await page.locator('#select-frame').click();await page.locator('[data-part="upperArm"]').click();assert.match(await page.locator('#detail-description').innerText(),/provisional/);
   assert.equal(await page.evaluate(()=>window.beecamViewer.inspect().selected),'upperArm');
@@ -25,17 +27,27 @@ try{
   await page.locator('#pattern-toggle').uncheck();assert.equal(await page.evaluate(()=>window.beecamViewer.inspect().pattern),false);
   await page.screenshot({path:new URL('../private/uncovered-platform.png',import.meta.url).pathname});
   await page.locator('#reset-view').click();
-  await page.locator('[data-part="rearPanel"]').click();await page.locator('#isolate-part').click();assert.equal(await page.locator('.part-label:visible').count(),1);await page.locator('#isolate-part').click();
+  await page.locator('#select-platform').click();await page.locator('[data-part="rearPanel"]').click();await page.locator('#isolate-part').click();assert.equal(await page.locator('.part-label:visible').count(),1);await page.locator('#isolate-part').click();
   await page.locator('#canvas-host').focus();await page.keyboard.press('ArrowRight');
   await page.locator('[data-view="drawings"]').click();
   // Force all lazy-loaded drawings to load for link and rendering validation.
   await page.locator('.drawing-card img').evaluateAll(imgs=>imgs.forEach(i=>i.loading='eager'));
   await page.waitForFunction(()=>[...document.querySelectorAll('.drawing-card img')].every(i=>i.complete&&i.naturalWidth>0));
-  assert.equal(await page.locator('.drawing-card').count(),21);
+  assert.equal(await page.locator('.drawing-card').count(),34);
   await page.screenshot({path:new URL('../private/drawings.png',import.meta.url).pathname,fullPage:true});
-  await page.locator('[data-view="materials"]').click();assert.equal(await page.locator('#bom-body tr').count(),19);
+  await page.locator('[data-view="materials"]').click();assert.equal(await page.locator('#bom-body tr').count(),30);
   const [download]=await Promise.all([page.waitForEvent('download'),page.locator('a[download][href$=".csv"]').click()]);assert.equal(download.suggestedFilename(),'camera-materials.csv');
-  await page.locator('#inside-scope').click();assert.match(await page.locator('#detail-title').innerText(),/enclosure/);
+  await page.locator('#inside-scope').click();assert.match(await page.locator('#detail-title').innerText(),/Acrylic/);
+  assert.equal(await page.evaluate(()=>beecamViewer.inspect().inside),true);assert.equal(await page.evaluate(()=>beecamViewer.inspect().enclosure.open),true);
+  await page.locator('[data-view="explore"]').click();await page.waitForTimeout(100);await page.screenshot({path:new URL('../private/inside-verified.png',import.meta.url).pathname});
+  await page.locator('[data-part="piPlate"]').click();await page.locator('#isolate-part').click();assert.equal(await page.locator('.part-label:visible').count(),1);await page.locator('#isolate-part').click();
+  await page.locator('#lid-toggle').uncheck();assert.equal(await page.evaluate(()=>beecamViewer.inspect().enclosure.open),false);
+  await page.locator('#lid-toggle').check();
+  await page.locator('[data-part="aiCamera"]').click();assert.match(await page.locator('#detail-title').innerText(),/AI Camera/);
+  await page.locator('#internals-toggle').uncheck();assert.equal(await page.evaluate(()=>beecamViewer.inspect().assemblies.internals),false);await page.locator('#internals-toggle').check();
+  await page.locator('#explode').fill('50');await page.locator('#explode').dispatchEvent('input');assert.equal(await page.evaluate(()=>beecamViewer.inspect().explode),.5);
+  await page.locator('#reset-view').click();assert.equal(await page.evaluate(()=>beecamViewer.inspect().explode),0);
+
   await page.locator('#whole-scope').click();await page.locator('[data-view="explore"]').click();
   await page.setViewportSize({width:390,height:844});await page.waitForTimeout(150);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'mobile horizontal overflow');
@@ -45,5 +57,5 @@ try{
   await page.setViewportSize({width:760,height:850});await page.locator('[data-view="explore"]').click();
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'tablet horizontal overflow');
   assert.deepEqual(failures,[]);
-  console.log('PASS: rendering, geometry counts, selection/isolation, labels, hardware, explosion, camera presets, keyboard orbit, 21 drawings, CSV download, assembly scopes, mobile/tablet layout; no browser errors or failed requests.');
+  console.log('PASS: rendering, geometry counts, selection/isolation, labels, hardware, explosion, camera presets, keyboard orbit, 34 drawings, CSV download, working enclosure/internal scopes and opening lid, mobile/tablet layout; no browser errors or failed requests.');
 }finally{await browser.close();}

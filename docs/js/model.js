@@ -2,6 +2,7 @@ import * as THREE from '../vendor/three.module.js';
 import { OrbitControls } from '../vendor/OrbitControls.js';
 import { parameters as P, parts } from './data.js';
 import { addPlatform } from './platform-model.js';
+import {addEnclosure} from './enclosure-model.js';
 
 const v = xyz => new THREE.Vector3(...xyz);
 export function createViewer(host, labelsHost, onSelect) {
@@ -85,16 +86,19 @@ export function createViewer(host, labelsHost, onSelect) {
   const plate=partGroup('plate',[12,45,10],[45,-20,40]);box(plate,[4,40,40],[0,0,0]);
   for(const y of [-10,10])for(const z of [-10,10])bolt(plate,[2,y,z],[1,0,0]);
   addPlatform({partGroup,mesh,bolt,addLabel});
+  const enclosure=addEnclosure({partGroup,mesh,bolt,addLabel});
   for(const g of registry){g.userData.partIds=new Set([g.userData.id]);g.traverse(m=>{if(m.isMesh){m.userData.id??=g.userData.id;g.userData.partIds.add(m.userData.id);m.userData.baseColor=m.material.color.clone();clickables.push(m);}});}
   let selected=null,labels=true,hardware=true,explode=0,isolated=false,pattern=true,labelScope='platform';
-  const assemblies={frame:true,platform:true};
-  function updateVisibility(){for(const g of registry){g.visible=assemblies[g.userData.assembly]&&(!g.userData.hardware||hardware)&&(!isolated||g.userData.partIds.has(selected));g.traverse(m=>{if(!m.isMesh&&!m.isLineSegments)return;m.visible=(!isolated||g.userData.id===selected||m.userData.id===selected)&&(m.userData.id!=='pattern'||pattern);});}}
+  const assemblies={frame:true,platform:true,enclosure:true,internals:true};
+  let inside=false;
+  function updateVisibility(){for(const g of registry){g.visible=assemblies[g.userData.assembly]&&(!inside||['enclosure','internals'].includes(g.userData.assembly))&&(!g.userData.hardware||hardware)&&(!isolated||g.userData.partIds.has(selected));g.traverse(m=>{if(!m.isMesh&&!m.isLineSegments)return;m.visible=(!isolated||g.userData.id===selected||m.userData.id===selected)&&(m.userData.id!=='pattern'||pattern);});}}
   function select(id){selected=id;isolated=false;for(const m of clickables){m.material.color.copy(m.userData.baseColor);m.material.emissive?.setHex(0);if(m.userData.id===id){m.material.color.setHex(0x40a9bb);m.material.emissive?.setHex(0x0c2830);}}for(const l of labelItems)l.label.classList.toggle('selected',l.group.userData.id===id);updateVisibility();}
   let fitScale=1;
   function setCamera(name='iso'){
     camera.up.set(0,1,0);controls.target.set(0,275,75);
-    const views={iso:[-740,650,950],front:[0,280,1250],side:[1250,280,75],top:[0,1200,76]};
+    const views={iso:[740,650,950],front:[0,280,1250],side:[1250,280,75],top:[0,1200,76]};
     if(name==='top'){controls.target.set(0,0,120);camera.up.set(0,0,-1);}
+    if(inside){const z=enclosure.inspect().centerZ;controls.target.set(0,400,z+30);camera.up.set(0,1,0);Object.assign(views,{iso:[310,135,z-330],front:[0,340,z-550],side:[570,390,z],top:[0,50,z+31]});if(name==='top')camera.up.set(0,0,1);}
     camera.position.copy(v(views[name]||views.iso));camera.position.sub(controls.target).multiplyScalar(fitScale).add(controls.target);controls.update();
   }
   setCamera();
@@ -110,7 +114,7 @@ export function createViewer(host, labelsHost, onSelect) {
   host.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','-'].includes(e.key)){e.preventDefault();const offset=camera.position.clone().sub(controls.target),s=new THREE.Spherical().setFromVector3(offset);if(e.key==='ArrowLeft')s.theta-=.12;if(e.key==='ArrowRight')s.theta+=.12;if(e.key==='ArrowUp')s.phi=Math.max(.05,s.phi-.12);if(e.key==='ArrowDown')s.phi=Math.min(Math.PI-.05,s.phi+.12);if(e.key==='+')s.radius*=.9;if(e.key==='-')s.radius*=1.1;camera.position.copy(controls.target).add(new THREE.Vector3().setFromSpherical(s));controls.update();}});
   function render(){requestAnimationFrame(render);controls.update();renderer.render(scene,camera);const w=host.clientWidth,h=host.clientHeight;
     const placed=[];
-    for(const l of labelItems){const p=l.anchor.clone().addScaledVector(l.group.userData.explode,explode).project(camera);const show=labels&&l.group.visible&&l.group.userData.assembly===labelScope&&p.z<1&&p.z>-1;l.label.hidden=!show;l.leader.style.display=show?'':'none';if(show){const ax=(p.x+1)/2*w,ay=(1-p.y)/2*h;let x=ax+l.offset[0],y=ay+l.offset[1];x=Math.max(60,Math.min(w-60,x));y=Math.max(115,Math.min(h-45,y));for(const prev of placed)if(Math.abs(x-prev.x)<110&&Math.abs(y-prev.y)<28)y+=30;placed.push({x,y});l.label.style.left=x+'px';l.label.style.top=y+'px';l.leader.setAttribute('x1',ax);l.leader.setAttribute('y1',ay);l.leader.setAttribute('x2',x);l.leader.setAttribute('y2',y);}}
+    for(const l of labelItems){const p=(['enclosure','internals'].includes(l.group.userData.assembly)?enclosure.anchor(l.anchor,l.group):l.anchor.clone().addScaledVector(l.group.userData.explode,explode)).project(camera);const show=labels&&l.group.visible&&l.group.userData.assembly===labelScope&&p.z<1&&p.z>-1;l.label.hidden=!show;l.leader.style.display=show?'':'none';if(show){const ax=(p.x+1)/2*w,ay=(1-p.y)/2*h;let x=ax+l.offset[0],y=ay+l.offset[1];x=Math.max(60,Math.min(w-60,x));y=Math.max(115,Math.min(h-45,y));for(const prev of placed)if(Math.abs(x-prev.x)<110&&Math.abs(y-prev.y)<28)y+=30;placed.push({x,y});l.label.style.left=x+'px';l.label.style.top=y+'px';l.leader.setAttribute('x1',ax);l.leader.setAttribute('y1',ay);l.leader.setAttribute('x2',x);l.leader.setAttribute('y2',y);}}
   }render();
-  return {select,setCamera,setLabels(value){labels=value;},setLabelScope(value){labelScope=value;},setAssembly(id,value){assemblies[id]=value;updateVisibility();},setPattern(value){pattern=value;updateVisibility();},setHardware(value){hardware=value;updateVisibility();},setExplode(value){explode=value;for(const g of registry)g.position.copy(g.userData.base).addScaledVector(g.userData.explode,value);},isolate(){isolated=!isolated;updateVisibility();return isolated;},reset(){select(null);setCamera();},inspect(){return {members:registry.filter(g=>locations[g.userData.id]).length,brackets:registry.filter(g=>g.userData.id.includes('Bracket')).length,screws:clickables.filter(m=>m.userData.id==='screw').length/3,nuts:clickables.filter(m=>m.userData.id==='nut').length,platformScrews:clickables.filter(m=>m.userData.id==='platformScrews').length/3,platformNuts:clickables.filter(m=>m.userData.id==='platformNuts').length,panels:registry.filter(g=>g.userData.id.endsWith('Panel')).length,stoppers:registry.filter(g=>g.userData.id==='stoppers').length,assemblies:{...assemblies},pattern,selected,explode,hardware};}};
+  return {select,setCamera,setScope(value){inside=value;grid.visible=!value;enclosure.setOpen(value);select(null);setCamera();},setLid(value){enclosure.setOpen(value);},setLabels(value){labels=value;},setLabelScope(value){labelScope=value;},setAssembly(id,value){assemblies[id]=value;updateVisibility();},setPattern(value){pattern=value;updateVisibility();},setHardware(value){hardware=value;updateVisibility();},setExplode(value){explode=value;for(const g of registry)g.position.copy(g.userData.base).addScaledVector(g.userData.explode,value);enclosure.setExplode(value);},isolate(){isolated=!isolated;updateVisibility();return isolated;},reset(){select(null);setCamera();},inspect(){return {members:registry.filter(g=>locations[g.userData.id]).length,brackets:registry.filter(g=>g.userData.id.includes('Bracket')).length,screws:clickables.filter(m=>m.userData.id==='screw').length/3,nuts:clickables.filter(m=>m.userData.id==='nut').length,platformScrews:clickables.filter(m=>m.userData.id==='platformScrews').length/3,platformNuts:clickables.filter(m=>m.userData.id==='platformNuts').length,panels:registry.filter(g=>g.userData.id.endsWith('Panel')).length,stoppers:registry.filter(g=>g.userData.id==='stoppers').length,assemblies:{...assemblies},pattern,selected,explode,hardware,inside,enclosure:enclosure.inspect()};}};
 }
