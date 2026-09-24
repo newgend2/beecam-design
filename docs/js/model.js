@@ -1,8 +1,8 @@
 import * as THREE from '../vendor/three.module.js';
 import { OrbitControls } from '../vendor/OrbitControls.js';
-import { parameters as P, parts } from './data.js?v=e0cc66a16aeb';
-import { addPlatform } from './platform-model.js?v=e0cc66a16aeb';
-import {addEnclosure} from './enclosure-model.js?v=e0cc66a16aeb';
+import { parameters as P, parts } from './data.js?v=da3b2fb6589e';
+import { addPlatform } from './platform-model.js?v=da3b2fb6589e';
+import {addEnclosure} from './enclosure-model.js?v=da3b2fb6589e';
 
 const v = xyz => new THREE.Vector3(...xyz);
 export function createViewer(host, labelsHost, onSelect) {

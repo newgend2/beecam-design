@@ -1,5 +1,5 @@
 import * as THREE from '../vendor/three.module.js';
-import {electronicsParameters as E} from './data.js?v=e0cc66a16aeb';
+import {electronicsParameters as E} from './data.js?v=da3b2fb6589e';
 // Board outlines use manufacturer dimensions; confirmed and estimated heights live in data.js.
 export function addElectronics({group,mesh,addLabel,plateY,centerZ,roundedRect,flat,hole,ring,cyl,box,cameraHoles,cameraY}){
  const material=(color,extra={})=>new THREE.MeshStandardMaterial({color,roughness:.48,...extra});
@@ -53,9 +53,9 @@ export function addElectronics({group,mesh,addLabel,plateY,centerZ,roundedRect,f
  for(let i=0;i<12;i++){box(witty,[1,.6,1.8],[8,1.95,-10+i*2.6],silver);box(witty,[1.6,.6,.8],[4,1.95,-9+i*2.6],gold);}
  marking(witty,'WITTY PI 4 MINI',19,3,[2,1.75,11]);
  const header=create('stackHeader',[piX-11.5,piY+4.2,piZ],[-45,-153,0],false);
- box(header,[5.1,8.5,50.8],[0,4.25,0],black);
- const pinLength=wittyY+1.6-(piY+4.2+8.5);
- for(let row=0;row<2;row++)for(let i=0;i<20;i++)box(header,[.64,pinLength,.64],[-1.27+row*2.54,8.5+pinLength/2,(i-9.5)*2.54],gold);
+ const housingHeight=E.headerHeight-E.headerPinLength;
+ box(header,[E.headerWidth,housingHeight,E.headerLength],[0,housingHeight/2,0],black);
+ for(let row=0;row<2;row++)for(let i=0;i<20;i++)box(header,[E.headerPinWidth,E.headerPinLength,E.headerPinWidth],[(row-.5)*E.headerPitch,housingHeight+E.headerPinLength/2,(i-9.5)*E.headerPitch],gold);
  // DEV-14459: outline 52.324 x 22.987, GPIO at the inner long edge.
  const qx=piX-11.5-7.2765;
  const hat=create('qwiicHat',[qx,qwiicY,piZ],[-70,-163,0],true,[-85,25]);pcb(hat,E.qwiicDepth,E.qwiicWidth,[],red);

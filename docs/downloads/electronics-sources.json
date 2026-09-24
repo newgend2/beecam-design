@@ -5,23 +5,27 @@
     {
       "source": "https://www.uugear.com/repo/WittyPi4/WittyPi4Mini.step",
       "sha256": "69e0dc27e158a13bcaaab5b0aed1288ae419f1ea1fbe153227852a0e31a38f94",
-      "use": "Major component envelopes; board nominal 65 \u00d7 30 mm. Viewer uses original simplified geometry."
+      "use": "Major component envelopes; board nominal 65 × 30 mm. Viewer uses original simplified geometry."
     },
     {
       "source": "https://raw.githubusercontent.com/adafruit/Adafruit_CAD_Parts/main/5188%20DS3231%20RTC/5188%20DS3231%20RTC.step",
       "sha256": "3bf6b49cea0171cbd743afded56fe676264ffbb57b9ed16d59fd8c668fb2fe3a",
-      "use": "25.4 \u00d7 17.78 mm PCB, 1.57 mm PCB thickness; simplified component envelopes."
+      "use": "25.4 × 17.78 mm PCB, 1.57 mm PCB thickness; simplified component envelopes."
     },
     {
       "source": "https://github.com/adafruit/Adafruit-DS3231-Precision-RTC-Breakout-PCB",
       "sha256": "01c08bf96b77df0f2d026300c720540c41a7fdcb7ada94f49740bf9476c94a7d",
-      "use": "Two \u00d83 mm mounting holes, 20.32 mm apart; their row is 6.35 mm from PCB centre."
+      "use": "Two Ø3 mm mounting holes, 20.32 mm apart; their row is 6.35 mm from PCB centre."
     },
     {
       "source": "https://github.com/sparkfun/Qwiic_Hat_for_Raspberry_Pi",
       "sha256": "4fbd9f3e47422b29c857a1542599c56415d3e5dafa41fafefcd7242b81c9e8ae",
-      "use": "DEV-14459 outline envelope 52.324 \u00d7 22.987 mm. Shared GPIO and four Qwiic port locations. Rounded corners and components simplified."
+      "use": "DEV-14459 outline envelope 52.324 × 22.987 mm. Shared GPIO and four Qwiic port locations. Rounded corners and components simplified."
+    },
+    {
+      "source": "https://www.amazon.com/dp/B084Q4W1PW",
+      "use": "Frienda 2×20 extra-tall stacking header: 51 × 5 × 23 mm overall, 12 mm pins, 2.54 mm pitch, approximately 0.6 mm pin thickness. Dimensions from listing diagram and specifications."
     }
   ],
-  "notes": "Native vendor CAD linked, not redistributed. Main spacer lengths confirmed: Pi 15+6 mm, two Witty supports 20+6 mm, OLED 10 mm, four 5 mm retainers. RTC spacer length, screws, OLED PCB size, cable curves and header model remain provisional."
+  "notes": "Native vendor CAD is linked, not redistributed. Installed standoff bodies: Pi 15 mm, two Witty supports 20 mm, OLED 10 mm, RTC 10 mm, four retainers 5 mm. Pi and Witty supports have 6 mm male threads. Purchased component details and cable routes are simplified for assembly reference."
 }

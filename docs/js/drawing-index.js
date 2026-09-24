@@ -3,257 +3,242 @@ export default {
   "drawings/aiCamera.svg": {
     "width": 1000,
     "height": 500,
-    "revision": "469ad362332f"
+    "revision": "8807a24d3159"
   },
   "drawings/assembly.svg": {
     "width": 1200,
     "height": 900,
-    "revision": "f0e1c9f56653"
+    "revision": "056e9bab8189"
   },
   "drawings/boxBody.svg": {
     "width": 1000,
     "height": 520,
-    "revision": "fd59ce0f4c56"
+    "revision": "16bbbef2cd9d"
   },
   "drawings/boxLid.svg": {
     "width": 1000,
     "height": 635,
-    "revision": "9fe92e318898"
+    "revision": "19cdd44fed19"
   },
   "drawings/boxMount.svg": {
     "width": 1000,
     "height": 625,
-    "revision": "f66ee7bf0777"
+    "revision": "3ce7dac24ab4"
   },
   "drawings/boxScrews.svg": {
     "width": 1000,
     "height": 430,
-    "revision": "62ce26b61985"
+    "revision": "5f38d0007ec1"
   },
   "drawings/cameraNuts.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "f19b3f6ee21e"
+    "revision": "7cbe30329878"
   },
   "drawings/cameraScrews.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "75a38bf0099e"
+    "revision": "48297a99c9bf"
   },
   "drawings/cameraSpacerNuts.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "c0fcd9a9bbb8"
+    "revision": "d66a08b38941"
   },
   "drawings/cameraWashers.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "706929299719"
-  },
-  "drawings/crossVanes.svg": {
-    "width": 1000,
-    "height": 605,
-    "revision": "707693378bfc"
+    "revision": "e15c544f4e4d"
   },
   "drawings/crossbar.svg": {
     "width": 900,
     "height": 370,
-    "revision": "b9d7eebafb4e"
+    "revision": "6f9c150075f4"
   },
   "drawings/csiCable.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "af07710b1722"
+    "revision": "33b047263f19"
   },
   "drawings/enclosureAssembly.svg": {
     "width": 1000,
     "height": 570,
-    "revision": "a8c0ab7d2a1a"
+    "revision": "20776419d7df"
   },
   "drawings/frontPanel.svg": {
     "width": 1000,
     "height": 650,
-    "revision": "2e880fc50927"
+    "revision": "56747bd93649"
   },
   "drawings/internalsAssembly.svg": {
     "width": 1000,
     "height": 930,
-    "revision": "e8c1b458e68b"
+    "revision": "d2cce8d597e9"
   },
   "drawings/jstCables.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "984e8726bdb8"
+    "revision": "29389a46b1f1"
   },
   "drawings/largeBracket.svg": {
     "width": 900,
     "height": 370,
-    "revision": "97c256b9c9e9"
+    "revision": "223380b420f5"
   },
   "drawings/leftRail.svg": {
     "width": 900,
     "height": 370,
-    "revision": "d9c86e02687a"
+    "revision": "a3ab9e188423"
   },
   "drawings/lidGland.svg": {
     "width": 1000,
     "height": 430,
-    "revision": "f3b9cdaea35a"
+    "revision": "300969570a35"
   },
   "drawings/lowerSupport.svg": {
     "width": 900,
     "height": 370,
-    "revision": "35096b38cc0e"
+    "revision": "75daa5a10a79"
   },
   "drawings/microSD.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "8846ba96bbe9"
+    "revision": "414a6c936e20"
   },
   "drawings/nut.svg": {
     "width": 900,
     "height": 370,
-    "revision": "c586761be3e5"
+    "revision": "888dd9fe8787"
   },
   "drawings/oled.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "b709ba59e166"
+    "revision": "33cc0eb649b3"
   },
   "drawings/oledScrews.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "db81c6a77aea"
+    "revision": "7e1f83df9a3d"
   },
   "drawings/oledStandoffs.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "fabb6828cbf8"
+    "revision": "ebd9f67b8335"
   },
   "drawings/piPlate.svg": {
     "width": 1000,
     "height": 870,
-    "revision": "222e71680bae"
+    "revision": "17102d32b1cc"
   },
   "drawings/piStandoffs.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "715bf35e1a88"
+    "revision": "b7c1e93ddcf3"
   },
   "drawings/piZero.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "d89429184039"
+    "revision": "2f842607e41d"
   },
   "drawings/plate.svg": {
     "width": 900,
     "height": 370,
-    "revision": "28c13a9c9225"
+    "revision": "1d3a7a49cc81"
   },
   "drawings/plateScrews.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "d5deb7e11d73"
+    "revision": "dd492d9738cb"
   },
   "drawings/platformAssembly.svg": {
     "width": 1000,
     "height": 650,
-    "revision": "3f6dadd9003b"
-  },
-  "drawings/platformScrews.svg": {
-    "width": 1000,
-    "height": 440,
-    "revision": "e82609775a31"
+    "revision": "e64a1b1fc8b2"
   },
   "drawings/qwiicHat.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "2ede3e55f450"
+    "revision": "9a5a54bf360e"
   },
   "drawings/rearPanel.svg": {
     "width": 1000,
     "height": 650,
-    "revision": "4b6f7f40c3f6"
+    "revision": "1b4f718605be"
   },
   "drawings/rightRail.svg": {
     "width": 900,
     "height": 370,
-    "revision": "c1dec1d3db78"
+    "revision": "e5a5822f19a6"
   },
   "drawings/rtc.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "2f3bbbcc5b41"
+    "revision": "4753ec98a5ed"
   },
   "drawings/rtcBattery.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "509c4bfb1aa9"
+    "revision": "f2afcdc3073d"
   },
   "drawings/rtcStandoffs.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "d2b36bbd2c88"
+    "revision": "95c21452f74e"
   },
   "drawings/screw.svg": {
     "width": 900,
     "height": 370,
-    "revision": "e0137f01160f"
+    "revision": "301141a3adbc"
   },
   "drawings/sideBulkhead.svg": {
     "width": 1000,
     "height": 430,
-    "revision": "fe5de339a238"
+    "revision": "235dc7552dc5"
   },
   "drawings/smallBracket.svg": {
     "width": 900,
     "height": 370,
-    "revision": "a404fbe36c61"
+    "revision": "6cc27f46225f"
   },
   "drawings/stackHeader.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "4ba281098a2b"
+    "revision": "b3023c1c7754"
   },
   "drawings/stackRetainers.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "6f71637ea474"
+    "revision": "9e5dbc7fc817"
   },
   "drawings/stem.svg": {
     "width": 900,
     "height": 370,
-    "revision": "8cf03ca86ba1"
+    "revision": "da09cfd60739"
   },
   "drawings/stoppers.svg": {
     "width": 1000,
     "height": 560,
-    "revision": "acb4e0f679fe"
+    "revision": "ce14322c86f7"
   },
   "drawings/upperArm.svg": {
     "width": 900,
     "height": 370,
-    "revision": "7e69bbc5454e"
-  },
-  "drawings/vaneFunnel.svg": {
-    "width": 1000,
-    "height": 600,
-    "revision": "dd4370fa7201"
+    "revision": "abe592edef05"
   },
   "drawings/velcro.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "8f1cd12f8789"
+    "revision": "09a3434dc951"
   },
   "drawings/wittyPi.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "abcbd057de15"
+    "revision": "d5544d11f775"
   },
   "drawings/wittyStandoffs.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "be452d1e7426"
+    "revision": "6168951938c5"
   },
   "assets/contrast-pattern.svg": {
     "width": 420.00001,

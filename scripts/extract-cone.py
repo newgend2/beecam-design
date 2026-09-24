@@ -8,6 +8,7 @@ from pathlib import Path
 sys.path.insert(0,os.environ['FREECAD_LIB'])
 import FreeCAD,Part,MeshPart
 root=Path(__file__).resolve().parents[1]
+archive=root/'private/cone-exports';archive.mkdir(parents=True,exist_ok=True)
 s=Part.Shape();s.read(sys.argv[1])
 assert s.isValid() and s.isClosed() and len(s.Faces)==10
 edges=[]
@@ -31,11 +32,11 @@ solid=Part.Face(outline).revolve(FreeCAD.Vector(),FreeCAD.Vector(0,1,0),360)
 assert solid.isValid() and solid.isClosed()
 assert abs(solid.Volume-abs(s.Volume))<.01, 'Reconstructed profile must preserve imported volume'
 meta={'units':'mm','source':'Designer-supplied Inventor cone; STEP conversion, validated closed shell','height':round(s.BoundBox.YLength,6),'rimOuterDiameter':round(s.BoundBox.XLength,6),'rimInnerDiameter':round(next(r*2 for r,y in points if abs(y-s.BoundBox.YLength)<1e-7 and r<69),6),'profile':points,'volumeMm3':round(solid.Volume,6),'seatingConfirmed':False}
-(root/'docs/downloads/vane-cone-geometry.json').write_text(json.dumps(meta,indent=2)+'\n')
+(archive/'vane-cone-geometry.json').write_text(json.dumps(meta,indent=2)+'\n')
 (root/'docs/js/cone-geometry.js').write_text('// Geometry only; see scripts/extract-cone.py. Axis Y; lower outlet Y=0.\nexport default '+json.dumps(meta,indent=2)+';\n')
 mesh=MeshPart.meshFromShape(Shape=solid,LinearDeflection=.08,AngularDeflection=.08,Relative=False)
 # Explicit binary STL, fixed anonymous header, millimetre coordinates only.
-with (root/'docs/downloads/vane-cone-mm.stl').open('wb') as f:
+with (archive/'vane-cone-mm.stl').open('wb') as f:
     f.write(b'BeeCam cone geometry; units millimetres'.ljust(80,b' '));f.write(struct.pack('<I',mesh.CountFacets))
     for facet in mesh.Facets:
         values=list(facet.Normal)

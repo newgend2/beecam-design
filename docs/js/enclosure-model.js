@@ -1,7 +1,7 @@
-import {addElectronics} from './electronics-model.js?v=e0cc66a16aeb';
+import {addElectronics} from './electronics-model.js?v=da3b2fb6589e';
 import * as THREE from '../vendor/three.module.js';
-import G from './enclosure-geometry.js?v=e0cc66a16aeb';
-import {enclosureParameters as P} from './data.js?v=e0cc66a16aeb';
+import G from './enclosure-geometry.js?v=da3b2fb6589e';
+import {enclosureParameters as P} from './data.js?v=da3b2fb6589e';
 
 export function plateShape(data){
   const shape=new THREE.Shape(data.outline.map(p=>new THREE.Vector2(...p)));

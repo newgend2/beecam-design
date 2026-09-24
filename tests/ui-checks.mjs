@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {materialRows} from '../docs/js/data.js';
 import {createRequire} from 'node:module';
 import {mkdir} from 'node:fs/promises';
 const require=createRequire(import.meta.url);
@@ -14,7 +15,7 @@ try{
   assert.deepEqual(Object.fromEntries(['members','brackets','screws','nuts','platformScrews','platformNuts','panels','stoppers'].map(k=>[k,initial[k]])),{members:6,brackets:5,screws:22,nuts:22,platformScrews:8,platformNuts:8,panels:2,stoppers:4});
   assert.equal(initial.enclosure.lensZ,165);assert.equal(initial.enclosure.open,false);assert.equal(initial.inside,false);
   await page.screenshot({path:new URL('../private/desktop.png',import.meta.url).pathname,fullPage:true});
-  await page.locator('#select-frame').click();await page.locator('[data-part="upperArm"]').click();assert.match(await page.locator('#detail-description').innerText(),/provisional/);
+  await page.locator('#select-frame').click();await page.locator('[data-part="upperArm"]').click();assert.match(await page.locator('#detail-description').innerText(),/Adjust/);
   assert.equal(await page.evaluate(()=>window.beecamViewer.inspect().selected),'upperArm');
   await page.locator('#isolate-part').click();assert.equal(await page.locator('.part-label:visible').count(),1);
   await page.locator('#isolate-part').click();
@@ -29,17 +30,17 @@ try{
   await page.locator('#reset-view').click();
   await page.locator('#select-platform').click();await page.locator('[data-part="rearPanel"]').click();await page.locator('#isolate-part').click();assert.equal(await page.locator('.part-label:visible').count(),1);await page.locator('#isolate-part').click();
   await page.locator('#canvas-host').focus();await page.keyboard.press('ArrowRight');
-  await page.locator('[data-view="drawings"]').click();
+  await page.locator('button[data-view="drawings"]').click();
   // Force all lazy-loaded drawings to load for link and rendering validation.
   await page.locator('.drawing-card img').evaluateAll(imgs=>imgs.forEach(i=>i.loading='eager'));
   await page.waitForFunction(()=>[...document.querySelectorAll('.drawing-card img')].every(i=>i.complete&&i.naturalWidth>0));
-  assert.equal(await page.locator('.drawing-card').count(),55);
+  assert.equal(await page.locator('.drawing-card').count(),49);
   await page.screenshot({path:new URL('../private/drawings.png',import.meta.url).pathname,fullPage:true});
-  await page.locator('[data-view="materials"]').click();assert.equal(await page.locator('#bom-body tr').count(),51);
+  await page.locator('button[data-view="materials"]').click();assert.equal(await page.locator('[data-material]').count(),materialRows.length);
   const [download]=await Promise.all([page.waitForEvent('download'),page.locator('a[download][href$=".csv"]').click()]);assert.equal(download.suggestedFilename(),'camera-materials.csv');
-  await page.locator('#inside-scope').click();assert.match(await page.locator('#detail-title').innerText(),/Acrylic/);
+  await page.locator('button[data-view="explore"]').click();await page.locator('#inside-scope').click();assert.match(await page.locator('#detail-title').innerText(),/Acrylic/);
   assert.equal(await page.evaluate(()=>beecamViewer.inspect().inside),true);assert.equal(await page.evaluate(()=>beecamViewer.inspect().enclosure.open),true);
-  await page.locator('[data-view="explore"]').click();await page.waitForTimeout(100);await page.screenshot({path:new URL('../private/inside-verified.png',import.meta.url).pathname});
+  await page.locator('button[data-view="explore"]').click();await page.waitForTimeout(100);await page.screenshot({path:new URL('../private/inside-verified.png',import.meta.url).pathname});
   await page.locator('[data-part="piPlate"]').click();await page.locator('#isolate-part').click();assert.equal(await page.locator('.part-label:visible').count(),1);await page.locator('#isolate-part').click();
   await page.locator('#lid-toggle').uncheck();assert.equal(await page.evaluate(()=>beecamViewer.inspect().enclosure.open),false);
   await page.locator('#lid-toggle').check();
@@ -49,14 +50,14 @@ try{
   await page.locator('#explode').fill('50');await page.locator('#explode').dispatchEvent('input');assert.equal(await page.evaluate(()=>beecamViewer.inspect().explode),.5);
   await page.locator('#reset-view').click();assert.equal(await page.evaluate(()=>beecamViewer.inspect().explode),0);
 
-  await page.locator('#whole-scope').click();await page.locator('[data-view="explore"]').click();
+  await page.locator('#whole-scope').click();await page.locator('button[data-view="explore"]').click();
   await page.setViewportSize({width:390,height:844});await page.waitForTimeout(150);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'mobile horizontal overflow');
   await page.locator('#viewer').scrollIntoViewIfNeeded();await page.screenshot({path:new URL('../private/mobile.png',import.meta.url).pathname,fullPage:true});
-  await page.locator('#select-frame').click();await page.locator('[data-part="plate"]').click();assert.match(await page.locator('#detail-description').innerText(),/10 mm/);
+  await page.locator('#select-frame').click();await page.locator('[data-part="plate"]').click();assert.match(await page.locator('#detail-description').innerText(),/11-5308/);
   await page.locator('#part-drawing').click();assert.equal(await page.locator('#drawings-view').isVisible(),true);
-  await page.setViewportSize({width:760,height:850});await page.locator('[data-view="explore"]').click();
+  await page.setViewportSize({width:760,height:850});await page.locator('button[data-view="explore"]').click();
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'tablet horizontal overflow');
   assert.deepEqual(failures,[]);
-  console.log('PASS: rendering, geometry counts, selection/isolation, labels, hardware, explosion, camera presets, keyboard orbit, 55 drawings, CSV download, working enclosure/internal scopes and opening lid, mobile/tablet layout; no browser errors or failed requests.');
+  console.log('PASS: rendering, geometry counts, selection/isolation, labels, hardware, explosion, camera presets, keyboard orbit, 49 drawings, CSV download, working enclosure/internal scopes and opening lid, mobile/tablet layout; no browser errors or failed requests.');
 }finally{await browser.close();}

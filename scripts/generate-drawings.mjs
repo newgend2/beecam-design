@@ -9,7 +9,7 @@ const rect=(x,y,w,h,cl='part')=>`<rect class="${cl}" x="${x}" y="${y}" width="${
 const txt=(x,y,text,cl='text',anchor='start')=>`<text class="${cl}" x="${x}" y="${y}" text-anchor="${anchor}">${esc(text)}</text>`;
 function dh(x1,x2,y,from,label){return line(x1,from,x1,y+7,'ext')+line(x2,from,x2,y+7,'ext')+line(x1,y,x2,y,'dim')+txt((x1+x2)/2,y-9,label,'text','middle');}
 function dv(y1,y2,x,from,label){return line(from,y1,x+7,y1,'ext')+line(from,y2,x+7,y2,'ext')+line(x,y1,x,y2,'dim')+`<text class="text" transform="translate(${x-10},${(y1+y2)/2}) rotate(-90)" text-anchor="middle">${esc(label)}</text>`;}
-function svg(title,subtitle,body,w=900,h=370){return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(title)}"><defs><marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 10 0 L 0 5 L 10 10" fill="none" stroke="#246c80" stroke-width="1.5"/></marker></defs><style>text{font-family:Arial,sans-serif;fill:#27424f}.title{font-size:22px;font-weight:600}.small{font-size:12px;fill:#667e89}.text{font-size:14px}.caption{font-size:13px;letter-spacing:1px;fill:#5f7885}.line{stroke:#587785;stroke-width:1.3;fill:none}.part{stroke:#3b6273;stroke-width:1.5;fill:#edf3f6}.ext{stroke:#8da5af;stroke-width:.8}.dim{stroke:#246c80;stroke-width:1;marker-start:url(#arrow);marker-end:url(#arrow)}.pending{stroke:#8c7029;stroke-dasharray:6 4;stroke-width:1.5;fill:#fff7df}.hole{stroke:#466e80;stroke-width:1.5;fill:white}</style><rect width="100%" height="100%" fill="white"/>${txt(35,39,title,'title')}${txt(35,63,subtitle,'small')}${body}${line(35,h-43,w-35,h-43,'ext')}${txt(35,h-21,'BEECAM · FRAME REV 0.1 · ALL DIMENSIONS mm · DO NOT SCALE','small')}${txt(w-35,h-21,'REFERENCE DRAWING','small','end')}</svg>`;}
+function svg(title,subtitle,body,w=900,h=370){return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(title)}"><defs><marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 10 0 L 0 5 L 10 10" fill="none" stroke="#246c80" stroke-width="1.5"/></marker></defs><style>text{font-family:Arial,sans-serif;fill:#27424f}.title{font-size:22px;font-weight:600}.small{font-size:12px;fill:#667e89}.text{font-size:14px}.caption{font-size:13px;letter-spacing:1px;fill:#5f7885}.line{stroke:#587785;stroke-width:1.3;fill:none}.part{stroke:#3b6273;stroke-width:1.5;fill:#edf3f6}.ext{stroke:#8da5af;stroke-width:.8}.dim{stroke:#246c80;stroke-width:1;marker-start:url(#arrow);marker-end:url(#arrow)}.adjustable{stroke:#8c7029;stroke-dasharray:6 4;stroke-width:1.5;fill:#fff7df}.hole{stroke:#466e80;stroke-width:1.5;fill:white}</style><rect width="100%" height="100%" fill="white"/>${txt(35,39,title,'title')}${txt(35,63,subtitle,'small')}${body}${line(35,h-43,w-35,h-43,'ext')}${txt(35,h-21,'BEECAM · FRAME REV 1.0 · ALL DIMENSIONS mm · DO NOT SCALE','small')}${txt(w-35,h-21,'REFERENCE DRAWING','small','end')}</svg>`;}
 for(const p of parts){let body='';
  if(p.kind==='extrusion'){
   const scale=.86,x=75,y=145,w=p.length*scale;
@@ -25,7 +25,7 @@ for(const p of parts){let body='';
   const x=110,y=110,s=3.6,d=40*s;body=rect(x,y,d,d);
   for(const a of [10,30])for(const b of [10,30])body+=`<circle class="hole" cx="${x+a*s}" cy="${y+b*s}" r="${5.56*s/2}"/>`;
   body+=dh(x,x+d,85,y,'40')+dv(y,y+d,76,x,'40')+dh(x+10*s,x+30*s,282,y+d,'20 centres');
-  body+=rect(414,110,4*s,d)+dh(414,414+4*s,85,110,'4')+txt(508,145,'4 × Ø5.56 through holes')+txt(508,176,'20 × 20 hole-centre pattern')+txt(508,207,'10 mm edge-to-centre offset')+txt(508,258,'Recommended plate hardware: M5 × 10 mm.','small');
+  body+=rect(414,110,4*s,d)+dh(414,414+4*s,85,110,'4')+txt(508,145,'4 × Ø5.56 through holes')+txt(508,176,'20 × 20 hole-centre pattern')+txt(508,207,'10 mm edge-to-centre offset')+txt(508,258,'Installed hardware: 11-5308 + 14122.','small');
  }else if(p.id==='screw'){
   body=rect(170,163,160,50)+`<path class="part" d="M170 139Q117 139 117 188Q117 237 170 237Z"/>`;
   for(let x=183;x<330;x+=12)body+=line(x,166,x-9,210,'ext');
@@ -33,22 +33,22 @@ for(const p of parts){let body='';
  }else if(p.id==='nut'){
   body=rect(120,118,135,135)+`<circle class="hole" cx="187.5" cy="185.5" r="37.5"/>`+dh(120,255,89,118,'9')+dv(118,253,83,120,'9')+rect(390,118,135,45)+dv(118,163,558,525,'3')+txt(120,287,'FRONT','caption')+txt(390,200,'SIDE','caption')+txt(618,166,'M5 × 0.8')+txt(618,193,'Through thread');
  }
- await writeFile(out+`drawings/${p.id}.svg`,svg(`${p.code} / ${p.name}`,`${p.sku} · ${p.kind==='extrusion'?'Designer-supplied cut length':'80/20 catalogue dimensions · schematic geometry'}`,body));
+ await writeFile(out+`drawings/${p.id}.svg`,svg(`${p.code} / ${p.name}`,`${p.sku} · ${p.kind==='extrusion'?'Cut length':'80/20 catalogue dimensions · schematic geometry'}`,body));
 }
 let body='';const s=.68,fy=555,fx=265,sx=825;
 const front=(x,y,w,h,cl='part')=>rect(fx+x*s,fy-(y+h)*s,w*s,h*s,cl);
 const side=(z,y,w,h,cl='part')=>rect(sx+z*s,fy-(y+h)*s,w*s,h*s,cl);
 body+=txt(110,105,'FRONT','caption')+front(-10,0,20,570)+front(-210,100,420,20)+front(-210,100,20,20)+front(190,100,20,20)+front(-10,0,20,100);
-body+=front(-10,570-P.upperArmTopGap-20,20,20,'pending')+dh(fx-210*s,fx+210*s,595,fy-100*s,'420')+dv(fy-570*s,fy,fx-255*s,fx-10*s,'570');
-body+=txt(680,105,'SIDE','caption')+side(-10,0,20,570)+side(10,0,20,100)+side(10,100,20,20)+side(30,100,280,20)+side(10,570-P.upperArmTopGap-20,220,20,'pending');
+body+=front(-10,570-P.upperArmTopGap-20,20,20,'adjustable')+dh(fx-210*s,fx+210*s,595,fy-100*s,'420')+dv(fy-570*s,fy,fx-255*s,fx-10*s,'570');
+body+=txt(680,105,'SIDE','caption')+side(-10,0,20,570)+side(10,0,20,100)+side(10,100,20,20)+side(30,100,280,20)+side(10,570-P.upperArmTopGap-20,220,20,'adjustable');
 body+=dh(sx+10*s,sx+230*s,fy-(570-P.upperArmTopGap)*s-30,fy-(570-P.upperArmTopGap)*s,'220')+dh(sx+30*s,sx+310*s,595,fy-100*s,'280')+dv(fy-100*s,fy,sx-46, sx+10*s,'100');
-body+=txt(715,145,'Dashed: upper-arm height pending','small');
+body+=txt(715,145,'Dashed: adjustable arm position','small');
 const px=265,py=651,ps=.49;const plan=(x,z,w,d)=>rect(px+x*ps,py+z*ps,w*ps,d*ps);
 body+=txt(110,631,'PLAN / PLATFORM MEMBERS','caption')+plan(-210,10,420,20)+plan(-210,30,20,280)+plan(190,30,20,280)+plan(-10,-10,20,20)+dh(px-210*ps,px+210*ps,827,py+310*ps,'420');
-body+=txt(650,684,'CONNECTIONS','caption')+txt(650,713,'100 mm support and stem: bottoms flush.')+txt(650,739,'Crossbar rests on top of the short support.')+txt(650,765,'Corner alignment and hardware positions are photo-inferred.')+txt(650,805,'Slots and brackets omitted for clarity.','small');
+body+=txt(650,684,'CONNECTIONS','caption')+txt(650,713,'100 mm support and stem: bottoms flush.')+txt(650,739,'Crossbar rests on top of the short support.')+txt(650,765,'Align rail outer edges with the crossbar ends.')+txt(650,805,'Slots and brackets omitted for clarity.','small');
 await writeFile(out+'drawings/assembly.svg',svg('01 / Aluminum frame','Orthographic arrangement · six 20 × 20 mm extrusion members',body,1200,900));
 const csvCell=x=>'"'+String(x).replaceAll('"','""')+'"';
-const rows=[['reference','part','manufacturer','part_id','cut_length_mm','quantity','quantity_status','notes','product_url'],...parts.map(p=>[p.code,p.name,'80/20',p.sku,p.length||'',p.qty,p.kind==='extrusion'?'designer supplied':'provisional',p.note,sourceURL(p.sku)])];
+const rows=[['reference','part','manufacturer','part_id','cut_length_mm','quantity','quantity_status','notes','product_url'],...parts.map(p=>[p.code,p.name,'80/20',p.sku,p.length||'',p.qty,'per camera',p.note,sourceURL(p.sku)])];
 await writeFile(out+'downloads/frame-materials.csv',rows.map(r=>r.map(csvCell).join(',')).join('\n')+'\n');
-await writeFile(out+'downloads/frame-dimensions.json',JSON.stringify({units:'mm',revision:'0.1',parameters:P,parts},null,2)+'\n');
+await writeFile(out+'downloads/frame-dimensions.json',JSON.stringify({units:'mm',revision:'1.0',parameters:P,parts},null,2)+'\n');
 console.log(`Generated ${parts.length+1} SVG drawings, materials CSV, and dimension data.`);

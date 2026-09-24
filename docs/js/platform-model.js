@@ -1,13 +1,13 @@
 import * as THREE from '../vendor/three.module.js';
-import geometry from './platform-geometry.js?v=e0cc66a16aeb';
-import cone from './cone-geometry.js?v=e0cc66a16aeb';
-import {platformParameters as P} from './data.js?v=e0cc66a16aeb';
-import {panelShape,stopperShape,patternUV,vaneOutline} from './platform-shapes.js?v=e0cc66a16aeb';
+import geometry from './platform-geometry.js?v=da3b2fb6589e';
+import cone from './cone-geometry.js?v=da3b2fb6589e';
+import {platformParameters as P} from './data.js?v=da3b2fb6589e';
+import {panelShape,stopperShape,patternUV,vaneOutline} from './platform-shapes.js?v=da3b2fb6589e';
 
 export function addPlatform({partGroup,mesh,bolt,addLabel}){
-  const texture=new THREE.TextureLoader().load(new URL('../assets/contrast-pattern.svg?v=e0cc66a16aeb',import.meta.url).href);
+  const texture=new THREE.TextureLoader().load(new URL('../assets/contrast-pattern.svg?v=da3b2fb6589e',import.meta.url).href);
   texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=8;
-  const stopperTexture=new THREE.TextureLoader().load(new URL('../assets/stopper-contrast.svg?v=e0cc66a16aeb',import.meta.url).href);
+  const stopperTexture=new THREE.TextureLoader().load(new URL('../assets/stopper-contrast.svg?v=da3b2fb6589e',import.meta.url).href);
   stopperTexture.colorSpace=THREE.SRGBColorSpace;stopperTexture.anisotropy=8;
   const acrylic=new THREE.MeshStandardMaterial({color:0xc3e9ed,metalness:0,roughness:.25,transparent:true,opacity:.53,depthWrite:false,side:THREE.DoubleSide});
   const print=new THREE.MeshBasicMaterial({map:texture,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});

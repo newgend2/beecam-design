@@ -18,6 +18,12 @@ const plateTop=api.inspect().plateY+3;
 near(get('piZero').position.y-plateTop,15);
 near(get('wittyPi').position.y-get('piZero').position.y-1.6,20);
 near(get('oled').position.y-get('wittyPi').position.y-1.6,10);
+near(get('rtc').position.y-plateTop,10);
+// Catalogue envelope includes the socket body and 12 mm exposed pins.
+const headerBounds=new THREE.Box3().setFromObject(get('stackHeader')).getSize(new THREE.Vector3());
+near(headerBounds.x,5);near(headerBounds.y,23);near(headerBounds.z,51);
+assert.equal(get('stackHeader').children.length,41);
+for(const pin of get('stackHeader').children.slice(1))near(pin.geometry.parameters.height,12);
 // Each mounting post intersects an actual source acrylic hole, not a photo guess.
 for(const id of ['piStandoffs','rtcStandoffs'])for(const post of get(id).children.filter(m=>m.geometry.type==='ExtrudeGeometry')){
  const x=-(get(id).position.x+post.position.x),v=get(id).position.z-P.centerZ+post.position.z;
@@ -26,7 +32,7 @@ for(const id of ['piStandoffs','rtcStandoffs'])for(const post of get(id).childre
 assert.ok(get('wittyStandoffs').children.every(m=>m.position.z>0),'Tall supports only opposite OLED');
 scene.updateMatrixWorld(true);
 // Principal boards fit below the closed shell back, and remain within side walls.
-for(const id of ['piZero','wittyPi','qwiicHat','oled','rtc','csiCable','jstCables']){
+for(const id of ['piZero','wittyPi','qwiicHat','oled','rtc','stackHeader','csiCable','jstCables']){
  const b=new THREE.Box3().setFromObject(get(id));assert.ok(b.max.y<api.inspect().backY-3,`${id} hits back`);assert.ok(b.min.x>-64.5&&b.max.x<64.5,`${id} hits side wall`);
 }
 const ids=parts.filter(p=>p.assembly==='internals').map(p=>p.id),start=ids.map(id=>get(id).position.clone()),lid=get('boxLid').position.clone();

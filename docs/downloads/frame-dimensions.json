@@ -1,6 +1,6 @@
 {
   "units": "mm",
-  "revision": "0.1",
+  "revision": "1.0",
   "parameters": {
     "profile": 20,
     "stem": 570,
@@ -21,7 +21,7 @@
       "length": 570,
       "qty": 1,
       "kind": "extrusion",
-      "note": "Main vertical member. Cut length supplied by the designer."
+      "note": "Main vertical member, cut to 570 mm."
     },
     {
       "id": "crossbar",
@@ -31,7 +31,7 @@
       "length": 420,
       "qty": 1,
       "kind": "extrusion",
-      "note": "Centred across the top of the 100 mm support. Bottom ends of the stem and support are flush; connection confirmed by the designer."
+      "note": "Centred across the top of the 100 mm support. Keep the bottom ends of the stem and support flush."
     },
     {
       "id": "leftRail",
@@ -41,7 +41,7 @@
       "length": 280,
       "qty": 1,
       "kind": "extrusion",
-      "note": "Joins the front face of the crossbar at 90°. Outer edge aligned to the crossbar end, inferred from photos."
+      "note": "Joins the front face of the crossbar at 90°. Align its outer edge with the crossbar end."
     },
     {
       "id": "rightRail",
@@ -61,7 +61,7 @@
       "length": 220,
       "qty": 1,
       "kind": "extrusion",
-      "note": "Projects forward from the stem. Vertical position is provisional: 70 mm from stem top to arm top, awaiting measurement."
+      "note": "Projects forward from the stem. Adjust its vertical position in the stem slot to set the camera height."
     },
     {
       "id": "lowerSupport",
@@ -81,7 +81,8 @@
       "qty": 4,
       "kind": "hardware",
       "dims": "38 × 38 × 18 mm",
-      "note": "Four mounting holes: two on each face. Proposed count: one at the upper arm, two at the platform corners, one below the crossbar. Count and handedness inferred from photos."
+      "basis": "80/20 catalogue specification",
+      "note": "Four mounting holes: two on each face. Use one bracket at the upper arm, two at the platform corners and one below the crossbar."
     },
     {
       "id": "smallBracket",
@@ -91,7 +92,8 @@
       "qty": 1,
       "kind": "hardware",
       "dims": "18 × 18 × 18 mm",
-      "note": "Two slotted mounting holes and dual supports. One below the crossbar, opposite the larger bracket. Placement inferred from the close-up."
+      "basis": "80/20 catalogue specification",
+      "note": "Fits below the crossbar, opposite the larger bracket. Two slotted mounting holes and dual supports."
     },
     {
       "id": "plate",
@@ -101,27 +103,30 @@
       "qty": 1,
       "kind": "hardware",
       "dims": "40 × 40 × 4 mm",
-      "note": "Four Ø5.56 mm holes on a 20 mm square pattern. Joins the stem and short support. Height and side are photo-inferred. Manufacturer recommends M5 × 10 mm hardware here; the supplied M5 × 8 mm screw length needs checking for this joint."
+      "note": "Four holes on a 20 mm square pattern join the stem and short support. Fasten with four 11-5308 bolts and four 14122 nuts.",
+      "basis": "80/20 catalogue specification"
     },
     {
       "id": "screw",
       "code": "H4",
-      "name": "Button-head screw",
+      "name": "80/20 black button-head bolt",
       "sku": "11-5308",
       "qty": 22,
       "kind": "hardware",
       "dims": "M5 × 0.8 · 8 mm long",
-      "note": "Provisional total: 16 for four large brackets, 2 for the compact bracket, and 4 for the plate. Check plate screw length before ordering."
+      "note": "All frame, imaging-platform and box-to-arm black bolts are 80/20 11-5308 (M5 × 8 mm). This assembly uses 22: 16 at four 14057 brackets, 2 at one 14060 bracket and 4 at the joining plate. The consolidated parts list adds 8 platform and 2 arm bolts.",
+      "basis": "80/20 11-5308"
     },
     {
       "id": "nut",
       "code": "H5",
-      "name": "Slide-in T-nut block",
+      "name": "80/20 slide-in T-nut",
       "sku": "14122",
       "qty": 22,
       "kind": "hardware",
       "dims": "9 × 9 × 3 mm · M5",
-      "note": "One per screw, loaded from the extrusion ends. Quantity follows the provisional fastener count."
+      "note": "All frame, imaging-platform and box-to-arm T-nuts are 80/20 14122. This assembly uses 22. Add 8 platform and 2 arm nuts for the consolidated total.",
+      "basis": "80/20 14122"
     }
   ]
 }

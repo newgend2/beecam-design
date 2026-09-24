@@ -38,11 +38,6 @@ console.log('PASS: platform units, exact holes, 3 mm thickness, triangulated pan
 const C=(await import('../docs/js/cone-geometry.js')).default;
 assert.equal(C.height,91.44);assert.equal(C.rimOuterDiameter,139.7);
 assert.deepEqual(C.profile[0],C.profile.at(-1));assert.equal(C.profile.length,11);
-const stl=await readFile(new URL('../docs/downloads/vane-cone-mm.stl',import.meta.url));
-assert.equal(stl.length,84+stl.readUInt32LE(80)*50);
-assert.ok(stl.subarray(0,80).toString().startsWith('BeeCam cone geometry; units millimetres'));
-// Every vertex is finite and within the millimetre CAD envelope, with closed faces.
-for(let i=84;i<stl.length;i+=50)for(let j=3;j<12;j++){const v=stl.readFloatLE(i+j*4);assert.ok(Number.isFinite(v));assert.ok(Math.abs(v)<=91.441);}
 assert.equal(platformParameters.coneProfileConfirmed,true);
 assert.equal(platformParameters.coneSeatingConfirmed,false);
-console.log('PASS: converted cone profile, closed profile chain, STL structure and finite CAD envelope.');
+console.log('PASS: converted cone profile, closed profile chain, internal display geometry.');
