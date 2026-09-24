@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BeeCam · Assembly explorer</title>
+  <meta name="description" content="Explore the BeeCam camera-trap frame, labelled parts, dimensioned drawings, and materials.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a323e'/%3E%3Cpath d='M9 25V7h14M9 22h14v4' fill='none' stroke='%23f1bd48' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <header class="header"><a class="brand" href="./"><span class="brand-mark" aria-hidden="true">B</span>BeeCam <span class="brand-sub">Assembly explorer</span></a><span class="revision">FRAME · REV 0.1</span></header>
+  <main>
+    <div class="page-heading"><div><p class="eyebrow">CAMERA TRAP / DESIGN DOCUMENTATION</p><h1>Aluminum frame</h1></div><p class="intro">Explore the frame. Select a part to see its dimensions and hardware.</p></div>
+    <div class="workspace">
+      <aside class="assembly-panel">
+        <p class="eyebrow">ASSEMBLIES</p>
+        <div class="scope-switch" aria-label="Assembly focus"><button class="active" id="whole-scope" aria-pressed="true">Whole camera</button><button id="inside-scope" aria-pressed="false">Internals</button></div>
+        <div id="whole-tree"><button class="assembly-root selected" id="select-frame"><span class="tree-icon">▱</span><span>Aluminum frame<small>6 members + hardware</small></span><span class="tree-number">01</span></button><div id="parts-list" class="parts-list"></div><div class="future-part"><span>02</span> Imaging platform <small>To be added</small></div><div class="future-part"><span>03</span> Weatherproof box <small>To be added</small></div></div>
+        <div id="inside-tree" hidden><div class="future-part"><span>01</span> Weatherproof box <small>To be added</small></div><div class="future-part"><span>02</span> Acrylic + electronics <small>To be added</small></div><p class="muted scope-note">The internals will be documented after the frame.</p></div>
+        <div class="assembly-meta"><span>80/20 · 20 series</span><strong>20 × 20 <small>mm profile</small></strong><span>All dimensions in millimetres</span></div>
+      </aside>
+      <section class="main-panel" aria-label="Frame explorer">
+        <nav class="view-tabs" aria-label="Documentation views"><button class="active" data-view="explore" aria-pressed="true">3D assembly</button><button data-view="drawings" aria-pressed="false">Drawings</button><button data-view="materials" aria-pressed="false">Materials <span>11</span></button></nav>
+        <div id="explore-view" class="view-content">
+          <div class="viewer" id="viewer"><div class="viewer-heading"><span class="eyebrow">01 / ALUMINUM FRAME</span><span class="model-status">Layout draft</span></div><div id="canvas-host" tabindex="0" role="img" aria-label="Interactive 3D aluminum frame. Drag to rotate, scroll to zoom. Use the part list and view buttons for keyboard access."></div><div id="part-labels"></div><div class="viewer-toolbar"><div class="camera-buttons" aria-label="Camera views"><button data-camera="iso" class="active" aria-pressed="true">3D</button><button data-camera="front" aria-pressed="false">Front</button><button data-camera="side" aria-pressed="false">Side</button><button data-camera="top" aria-pressed="false">Top</button></div><button id="reset-view" title="Reset view">↺ <span>Reset</span></button></div><div class="viewer-bottom"><span>Drag to orbit · scroll to zoom</span><span>Y ↑ &nbsp; mm</span></div><div id="viewer-error" hidden><p>The 3D view needs WebGL.</p><button id="fallback-drawings">Open dimensioned drawings</button></div></div>
+          <div class="viewer-options"><label><input id="labels-toggle" type="checkbox" checked> Part labels</label><label><input id="hardware-toggle" type="checkbox" checked> Hardware</label><label class="explode-control">Explode <input id="explode" type="range" min="0" max="100" value="0" aria-label="Explode assembly"><output id="explode-value">0%</output></label></div>
+          <div class="review-note"><span class="note-icon">i</span><p><strong>Measured lengths. Provisional placement.</strong> Lower connection confirmed. Upper-arm height, hardware placement and quantities are under review.</p></div>
+        </div>
+        <div id="drawings-view" class="view-content document-view" hidden><div class="section-heading"><div><p class="eyebrow">DIMENSIONED REFERENCE</p><h2>Frame & part drawings</h2></div><button id="print-drawings">Print drawings</button></div><p class="muted">Cut lengths are designer-supplied. Purchased-part envelopes use 80/20 specifications. Simplified geometry; use manufacturer CAD for manufacturing details.</p><div id="drawing-grid"></div></div>
+        <div id="materials-view" class="view-content document-view" hidden><div class="section-heading"><div><p class="eyebrow">FRAME ONLY</p><h2>Materials & cut list</h2></div><a class="button" href="downloads/frame-materials.csv" download>Download CSV ↓</a></div><div class="bom-summary"><span><strong>6</strong> cut members</span><span><strong>1,870 mm</strong> net extrusion</span><span><strong>20 series</strong> hardware</span></div><p class="muted">Allow extra stock for saw kerf. Hardware counts are provisional. The square plate’s recommended screw length is 10 mm; confirm before ordering.</p><div class="table-wrap"><table><thead><tr><th>Ref</th><th>Part</th><th>80/20 ID</th><th>Size / cut</th><th>Qty</th><th>Basis</th></tr></thead><tbody id="bom-body"></tbody></table></div><p class="source-note">Part specifications checked against <a href="https://8020.net/" target="_blank" rel="noopener">80/20</a> on 23 September 2026. Quantities cover this frame model only.</p></div>
+      </section>
+      <aside class="detail-panel" aria-live="polite"><p class="eyebrow" id="detail-eyebrow">ASSEMBLY DETAILS</p><h2 id="detail-title">Aluminum frame</h2><p class="detail-description" id="detail-description">The structural skeleton of the camera trap: one vertical stem, a U-shaped platform support, and an upper mounting arm.</p><div id="detail-stats" class="detail-stats"></div><div id="detail-actions"></div><div class="detail-bottom"><p class="eyebrow">MODEL NOTES</p><p>Extrusion slots, cast brackets and screw threads are simplified. The viewer documents the arrangement; it is not a machining model.</p></div></aside>
+    </div>
+    <footer><span>BeeCam / Open design in progress</span><span>Frame first. Imaging platform & electronics next.</span></footer>
+  </main>
+  <noscript><p>This viewer requires JavaScript. <a href="downloads/frame-materials.csv">Download the frame materials</a> or <a href="drawings/assembly.svg">open the frame drawing</a>.</p></noscript>
+</body>
+</html>
