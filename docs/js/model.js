@@ -1,8 +1,8 @@
 import * as THREE from '../vendor/three.module.js';
 import { OrbitControls } from '../vendor/OrbitControls.js';
-import { parameters as P, parts } from './data.js';
-import { addPlatform } from './platform-model.js';
-import {addEnclosure} from './enclosure-model.js';
+import { parameters as P, parts } from './data.js?v=9506fc6a12d4';
+import { addPlatform } from './platform-model.js?v=9506fc6a12d4';
+import {addEnclosure} from './enclosure-model.js?v=9506fc6a12d4';
 
 const v = xyz => new THREE.Vector3(...xyz);
 export function createViewer(host, labelsHost, onSelect) {
@@ -98,7 +98,7 @@ export function createViewer(host, labelsHost, onSelect) {
     camera.up.set(0,1,0);controls.target.set(0,275,75);
     const views={iso:[740,650,950],front:[0,280,1250],side:[1250,280,75],top:[0,1200,76]};
     if(name==='top'){controls.target.set(0,0,120);camera.up.set(0,0,-1);}
-    if(inside){const z=enclosure.inspect().centerZ;controls.target.set(0,400,z+30);camera.up.set(0,1,0);Object.assign(views,{iso:[310,135,z-330],front:[0,340,z-550],side:[570,390,z],top:[0,50,z+31]});if(name==='top')camera.up.set(0,0,1);}
+    if(inside){const z=enclosure.inspect().centerZ;controls.target.set(0,385,z-25);camera.up.set(0,1,0);Object.assign(views,{iso:[310,135,z+330],front:[0,340,z+550],side:[570,390,z],top:[0,50,z-26]});if(name==='top')camera.up.set(0,0,-1);}
     camera.position.copy(v(views[name]||views.iso));camera.position.sub(controls.target).multiplyScalar(fitScale).add(controls.target);controls.update();
   }
   setCamera();

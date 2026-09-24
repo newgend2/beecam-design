@@ -25,7 +25,7 @@ for p in public.rglob('*'):
         for link in re.findall(r'(?:src|href)="([^"]+)"', text):
             if link.startswith(('https:', 'data:', '#')):
                 continue
-            if not (p.parent / link.split('#')[0]).exists():
+            if not (p.parent / link.split('#')[0].split('?')[0]).exists():
                 problems.append(f'Missing local link: {relative}: {link}')
 if total >= 1_000_000_000:
     problems.append('Site exceeds 1 GB hosting budget')

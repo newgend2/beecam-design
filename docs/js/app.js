@@ -1,5 +1,5 @@
-import {parts,totalLength,sourceURL} from './data.js';
-import {createViewer} from './model.js';
+import {parts,totalLength,sourceURL} from './data.js?v=9506fc6a12d4';
+import {createViewer} from './model.js?v=9506fc6a12d4';
 const $=s=>document.querySelector(s);
 let viewer=null,selected=null,assembly='enclosure',inside=false;
 const names={frame:'Aluminum frame',platform:'Imaging platform',enclosure:'Weatherproof box',internals:'Acrylic + camera'};

@@ -1,6 +1,6 @@
 import * as THREE from '../vendor/three.module.js';
-import G from './enclosure-geometry.js';
-import {enclosureParameters as P} from './data.js';
+import G from './enclosure-geometry.js?v=9506fc6a12d4';
+import {enclosureParameters as P} from './data.js?v=9506fc6a12d4';
 
 export function plateShape(data){
   const shape=new THREE.Shape(data.outline.map(p=>new THREE.Vector2(...p)));
@@ -54,9 +54,9 @@ export function addEnclosure({partGroup,mesh,bolt,addLabel}){
   flat(face,3,lid,[0,0,0]);
   const lip=roundedRect(150,150,6);lip.holes.push(new THREE.Path(roundedRect(144,144,4).getPoints(32)));flat(lip,8,lid,[0,3,0]);
   for(const x of [-48,48]){
-    const hinge=cyl(body,4,22,[x,-78,77],white);hinge.rotation.z=Math.PI/2;
-    const pin=cyl(lid,2,24,[x,12,77],metal);pin.rotation.z=Math.PI/2;
-    box(lid,[18,10,8],[x,10,-77]);box(body,[19,6,8],[x,-76,-77]);
+    const hinge=cyl(body,4,22,[x,-78,-77],white);hinge.rotation.z=Math.PI/2;
+    const pin=cyl(lid,2,24,[x,12,-77],metal);pin.rotation.z=Math.PI/2;
+    box(lid,[18,10,8],[x,10,77]);box(body,[19,6,8],[x,-76,77]);
   }
   const cable=G.lidPorts.cable.center;
   const gland=group('lidGland',[-cable[0],lidY,z+cable[1]],[-35,-70,0],true);
@@ -88,8 +88,8 @@ export function addEnclosure({partGroup,mesh,bolt,addLabel}){
   addLabel('boxLid',lid,[-55,lidY,z+45],[-60,25]);addLabel('sideBulkhead',cap,[95,backY-39,z],[50,20]);
   addLabel('lidGland',gland,[-cable[0],lidY-15,z+cable[1]],[-35,30]);
   addLabel('piPlate',plate,[-50,plateY+3,z+5],[-45,20]);addLabel('aiCamera',camera,[0,boardBottom,z+c[1]],[55,-20]);
-  const pivot=new THREE.Vector3(0,seamY,z+77),axis=new THREE.Vector3(1,0,0);
+  const pivot=new THREE.Vector3(0,seamY,z-77),axis=new THREE.Vector3(1,0,0);
   let opened=false,amount=0;
-  function update(){for(const g of groups){g.position.copy(g.userData.base);g.quaternion.identity();if(opened&&moving.includes(g)){g.position.sub(pivot).applyAxisAngle(axis,-115*Math.PI/180).add(pivot);g.quaternion.setFromAxisAngle(axis,-115*Math.PI/180);}g.position.addScaledVector(g.userData.explode,amount);}}
-  return {setOpen(value){opened=value;update();},setExplode(value){amount=value;update();},anchor(point,g){const p=point.clone();if(opened&&moving.includes(g))p.sub(pivot).applyAxisAngle(axis,-115*Math.PI/180).add(pivot);return p.addScaledVector(g.userData.explode,amount);},inspect(){return {open:opened,centerZ:z,lensZ:z+c[1],backY,lidY,plateY,cameraY:boardBottom};}};
+  function update(){for(const g of groups){g.position.copy(g.userData.base);g.quaternion.identity();if(opened&&moving.includes(g)){g.position.sub(pivot).applyAxisAngle(axis,Math.PI/2).add(pivot);g.quaternion.setFromAxisAngle(axis,Math.PI/2);}g.position.addScaledVector(g.userData.explode,amount);}}
+  return {setOpen(value){opened=value;update();},setExplode(value){amount=value;update();},anchor(point,g){const p=point.clone();if(opened&&moving.includes(g))p.sub(pivot).applyAxisAngle(axis,Math.PI/2).add(pivot);return p.addScaledVector(g.userData.explode,amount);},inspect(){return {open:opened,centerZ:z,lensZ:z+c[1],backY,lidY,plateY,cameraY:boardBottom};}};
 }

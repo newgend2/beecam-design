@@ -1,6 +1,6 @@
-import C from './cone-geometry.js';
-import G from './platform-geometry.js';
-import E from './enclosure-geometry.js';
+import C from './cone-geometry.js?v=9506fc6a12d4';
+import G from './platform-geometry.js?v=9506fc6a12d4';
+import E from './enclosure-geometry.js?v=9506fc6a12d4';
 // Dimensions are millimetres. User measurements and photo inferences stay separate.
 export const parameters = {
   profile: 20,
@@ -73,7 +73,7 @@ export const enclosureParameters = {
 };
 export const enclosureParts = [
   {id:'boxBody',code:'B1',name:'Enclosure body',qty:1,kind:'purchased',dims:'150 × 150 × 90 mm overall',basis:'Product envelope + designer ports',source:'https://www.amazon.com/dp/B08KWD8TFY',note:'Zulkit hinged ABS enclosure, supplied with lid, mounting screws and cable glands. Overall envelope from the linked product listing. The top hangs below the arm via the external acrylic plate. Right-side Ø28 mm cable-access hole is centred in the body wall. Wall thickness, taper, corner mouldings and hinge/latch geometry are simplified; the 3D model is a reference, not manufacturer CAD.'},
-  {id:'boxLid',code:'B2',name:'Drilled enclosure lid',qty:1,kind:'included',dims:'2 × Ø22 mm added ports',basis:'Designer diameters + DXF centres',note:'Included with B1, not an additional enclosure. Faces down toward the imaging platform. The camera hole follows the midpoint of the internal plate’s inner camera-hole pair; the other port shares the large acrylic clearance-hole centre. Lid shape and depth are schematic. Open the lid to inspect the removable internal plate.'},
+  {id:'boxLid',code:'B2',name:'Drilled enclosure lid',qty:1,kind:'included',dims:'2 × Ø22 mm added ports',basis:'Designer diameters + DXF centres',note:'Included with B1, not an additional enclosure. Faces down toward the imaging platform. Hinges face the stem and latches face the open end of the arm; orientation corrected by the designer while keeping all port locations fixed. The camera hole follows the midpoint of the internal plate’s inner camera-hole pair; the other port shares the large acrylic clearance-hole centre. Lid shape and depth are schematic. Open the lid to inspect the removable internal plate.'},
   {id:'boxMount',code:'B3',name:'Outer acrylic mounting plate',qty:1,kind:'acrylic',dims:'135 × 170 × 3 mm',basis:'Supplied DXF + confirmed thickness',download:'downloads/mount-plate-mm.dxf',note:'Exact rounded outline and six Ø5.5 mm holes from the supplied DXF. Four enclosure screws use the 117 × 116 mm pattern. Two arm fasteners use the central holes, 154 mm apart. The 3 mm plate sits against the underside of the 220 mm extrusion.'},
   {id:'lidGland',code:'B4',name:'Lid cable gland',qty:1,kind:'included',dims:'Ø22 mm lid port',basis:'Supplied with enclosure · shape schematic',source:'https://www.amazon.com/dp/B08KWD8TFY',note:'One of the glands supplied with B1. Fits the designer’s Ø22 mm lid hole at the centre of the internal plate’s Ø31.75 mm clearance opening. Nut, seal and compression cap are illustrative; dimensions of the gland itself are not confirmed.'},
   {id:'sideBulkhead',code:'B5',name:'Capped side bulkhead',qty:1,kind:'purchased',dims:'Ø28 mm wall hole · 27 mm thread',basis:'Designer hole + linked product',source:'https://www.amazon.com/dp/B0DHLLMRRK',note:'PATIKIL PVC bulkhead with screw-on cap, NPT 1/2-inch female × GHT 3/4-inch male. One fitting used; the linked product is a six-pack. Centred on the right body wall in a Ø28 mm hole. Thread diameter listed as 27 mm; cap, flange and projection are schematic because the listing gives conflicting overall sizes.'},

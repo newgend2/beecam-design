@@ -37,7 +37,7 @@ await put('internalsAssembly','04 / Acrylic and camera layout','Plan in source D
 b=rect(100,155,360,360,14)+l(280,140,280,530,'dash')+l(85,335,475,335,'dash');
 for(const [name,p]of Object.entries(G.lidPorts)){const x=280-p.center[0]*2.4,y=335-p.center[1]*2.4;b+=circle(x,y,26.4)+l(x-8,y,x+8,y,'ext')+l(x,y-8,x,y+8,'ext');}
 b+=dh(100,460,112,155,'150 overall')+dv(155,515,65,100,'150 overall');
-b+=t(525,150,'EXTERIOR LID VIEW')+t(525,184,'Hinge / camera edge shown at top')+t(525,224,'Camera: Ø22 at X75, Y116.032')+t(525,256,'Cable: Ø22 at X37.675, Y37.675')+t(525,293,'Datum: bottom-left of 150 × 150 envelope')+t(525,334,'Port locations derived from centred Pi plate.')+t(525,366,'Confirm plate-to-lid registration before drilling.')+t(525,412,'Camera port is the midpoint of the inner')+t(525,438,'camera bolt-hole pair, not the rectangle centre.');
+b+=t(525,150,'EXTERIOR LID VIEW')+t(525,184,'Latch / camera edge shown at top')+t(525,224,'Camera: Ø22 at X75, Y116.032')+t(525,256,'Cable: Ø22 at X37.675, Y37.675')+t(525,293,'Datum: bottom-left of 150 × 150 envelope')+t(525,334,'Port locations derived from centred Pi plate.')+t(525,366,'Confirm plate-to-lid registration before drilling.')+t(525,412,'Camera port is the midpoint of the inner')+t(525,438,'camera bolt-hole pair, not the rectangle centre.');
 b+=t(100,555,'Hinge, latch and rounded-shell details are schematic.','small');
 await put('boxLid','B2 / Modified enclosure lid','Two added Ø22 mm ports · lens and included cable gland',b,635);
 let body=rect(100,160,300,180,10)+circle(250,238,28)+dh(100,400,120,160,'150 nominal envelope')+dv(160,340,65,100,'90 overall');

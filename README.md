@@ -83,7 +83,9 @@ published. The DXF educational notice is retained in the normalized exports.
 ## Enclosure and camera
 
 The linked Zulkit enclosure has a nominal 150 × 150 × 90 mm envelope. Its lid
-faces down toward the trap. The supplied outer mounting-plate DXF is 135 × 170 mm
+faces down toward the trap. The designer corrected the shell orientation: hinges
+face the stem and latches face the open end of the arm, with all three port
+locations retained in absolute space. The supplied outer mounting-plate DXF is 135 × 170 mm
 with six Ø5.5 mm holes: four on a 117 × 116 mm rectangle for the included enclosure
 screws, and two 154 mm apart for the usual 80/20 M5 screws and nuts. Both enclosure
 acrylic plates are confirmed as 3 mm thick. The lens is confirmed directly above
@@ -142,6 +144,8 @@ python3 scripts/import-enclosure.py /path/to/source-folder
 node scripts/generate-drawings.mjs
 node scripts/generate-platform-drawings.mjs
 node scripts/generate-enclosure-drawings.mjs
+node scripts/version-assets.mjs
+node scripts/version-assets.mjs --check
 node tests/data-checks.mjs
 node tests/enclosure-checks.mjs
 python3 scripts/audit-public.py
@@ -149,6 +153,9 @@ python3 scripts/audit-public.py
 
 Drawings and exports are generated from the shared data. Commit updated outputs
 after changing dimensions. UI tests use Playwright when available.
+Run the asset-version step after code or artwork edits as well. It stamps a
+shared content revision on the entry point and every application-module import,
+so browser caches cannot mix a new page with old model or dimension code.
 `tests/enclosure-checks.mjs` checks the imported plate area, real port cutouts,
 camera alignment and rigid lid motion. `tests/stopper-occlusion.mjs` protects
 the earlier side-view sticker occlusion fix.
