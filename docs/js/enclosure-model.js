@@ -1,6 +1,7 @@
+import {addElectronics} from './electronics-model.js?v=e0cc66a16aeb';
 import * as THREE from '../vendor/three.module.js';
-import G from './enclosure-geometry.js?v=9506fc6a12d4';
-import {enclosureParameters as P} from './data.js?v=9506fc6a12d4';
+import G from './enclosure-geometry.js?v=e0cc66a16aeb';
+import {enclosureParameters as P} from './data.js?v=e0cc66a16aeb';
 
 export function plateShape(data){
   const shape=new THREE.Shape(data.outline.map(p=>new THREE.Vector2(...p)));
@@ -70,7 +71,6 @@ export function addEnclosure({partGroup,mesh,bolt,addLabel}){
   for(let i=0;i<60;i++){const a=i*Math.PI/30;const ridge=box(capAssembly,[.7,15,.7],[17*Math.cos(a),20,17*Math.sin(a)],black);ridge.rotation.y=-a;}
   const plateY=lidY+3+P.internalStandOffIllustrative;
   const plate=group('piPlate',[0,plateY,z],[0,-95,-15],true);flat(plateShape(G.internal),3,plate,[0,0,0],clear);
-  for(const [x,v] of [[-53,-53],[53,-53],[-53,0],[53,0],[-53,53],[27,53]])cyl(plate,9,2.8,[x,-1.5,v],black);
   const cameraHoles=G.internal.holes.filter(h=>Math.abs(h.radius-1)<.00001);
   const c=G.lidPorts.camera.center;
   const boardBottom=plateY+3+P.cameraStandOffIllustrative;
@@ -82,8 +82,7 @@ export function addEnclosure({partGroup,mesh,bolt,addLabel}){
   for(const h of cameraHoles)ring(camera,2.1,1.1,.08,[-h.center[0],1.12,h.center[1]-c[1]],gold);
   box(camera,[12,5,19.5],[0,-2.5,4.7],black);cyl(camera,4.5,5.5,[0,-7.75,0]);cyl(camera,3.3,.18,[0,-10.58,0],material(0x253b58,{metalness:.5,roughness:.12}));
   box(camera,[18,2.5,4],[0,2.35,13],white);box(camera,[6,1,5],[6,1.6,-5],black);
-  const camHardware=group('cameraScrews',[0,plateY,z],[0,-145,-15],true);
-  for(const h of cameraHoles){const x=-h.center[0],v=h.center[1];ring(camHardware,1.9,1,2,[x,3,v],metal);cyl(camHardware,1,7,[x,3.5,v],metal);cyl(camHardware,2,1,[x,6.7,v],metal);}
+  const electronics=addElectronics({group,mesh,addLabel,plateY,centerZ:z,roundedRect,flat,hole,ring,cyl,box,cameraHoles,cameraY:boardBottom});
   addLabel('boxBody',body,[65,backY-25,z],[60,-25]);addLabel('boxMount',mount,[-55,backY+3,z+70],[-65,-30]);
   addLabel('boxLid',lid,[-55,lidY,z+45],[-60,25]);addLabel('sideBulkhead',cap,[95,backY-39,z],[50,20]);
   addLabel('lidGland',gland,[-cable[0],lidY-15,z+cable[1]],[-35,30]);
@@ -91,5 +90,5 @@ export function addEnclosure({partGroup,mesh,bolt,addLabel}){
   const pivot=new THREE.Vector3(0,seamY,z-77),axis=new THREE.Vector3(1,0,0);
   let opened=false,amount=0;
   function update(){for(const g of groups){g.position.copy(g.userData.base);g.quaternion.identity();if(opened&&moving.includes(g)){g.position.sub(pivot).applyAxisAngle(axis,Math.PI/2).add(pivot);g.quaternion.setFromAxisAngle(axis,Math.PI/2);}g.position.addScaledVector(g.userData.explode,amount);}}
-  return {setOpen(value){opened=value;update();},setExplode(value){amount=value;update();},anchor(point,g){const p=point.clone();if(opened&&moving.includes(g))p.sub(pivot).applyAxisAngle(axis,Math.PI/2).add(pivot);return p.addScaledVector(g.userData.explode,amount);},inspect(){return {open:opened,centerZ:z,lensZ:z+c[1],backY,lidY,plateY,cameraY:boardBottom};}};
+  return {setOpen(value){opened=value;update();},setExplode(value){amount=value;update();},anchor(point,g){const p=point.clone();if(opened&&moving.includes(g))p.sub(pivot).applyAxisAngle(axis,Math.PI/2).add(pivot);return p.addScaledVector(g.userData.explode,amount);},inspect(){return {open:opened,centerZ:z,lensZ:z+c[1],backY,lidY,plateY,cameraY:boardBottom,electronics};}};
 }

@@ -33,9 +33,9 @@ try{
   // Force all lazy-loaded drawings to load for link and rendering validation.
   await page.locator('.drawing-card img').evaluateAll(imgs=>imgs.forEach(i=>i.loading='eager'));
   await page.waitForFunction(()=>[...document.querySelectorAll('.drawing-card img')].every(i=>i.complete&&i.naturalWidth>0));
-  assert.equal(await page.locator('.drawing-card').count(),34);
+  assert.equal(await page.locator('.drawing-card').count(),55);
   await page.screenshot({path:new URL('../private/drawings.png',import.meta.url).pathname,fullPage:true});
-  await page.locator('[data-view="materials"]').click();assert.equal(await page.locator('#bom-body tr').count(),30);
+  await page.locator('[data-view="materials"]').click();assert.equal(await page.locator('#bom-body tr').count(),51);
   const [download]=await Promise.all([page.waitForEvent('download'),page.locator('a[download][href$=".csv"]').click()]);assert.equal(download.suggestedFilename(),'camera-materials.csv');
   await page.locator('#inside-scope').click();assert.match(await page.locator('#detail-title').innerText(),/Acrylic/);
   assert.equal(await page.evaluate(()=>beecamViewer.inspect().inside),true);assert.equal(await page.evaluate(()=>beecamViewer.inspect().enclosure.open),true);
@@ -43,6 +43,7 @@ try{
   await page.locator('[data-part="piPlate"]').click();await page.locator('#isolate-part').click();assert.equal(await page.locator('.part-label:visible').count(),1);await page.locator('#isolate-part').click();
   await page.locator('#lid-toggle').uncheck();assert.equal(await page.evaluate(()=>beecamViewer.inspect().enclosure.open),false);
   await page.locator('#lid-toggle').check();
+  for(const id of ['piZero','wittyPi','qwiicHat','oled','rtc','stackRetainers','csiCable']){await page.locator(`[data-part="${id}"]`).click();assert.equal(await page.evaluate(()=>beecamViewer.inspect().selected),id);}
   await page.locator('[data-part="aiCamera"]').click();assert.match(await page.locator('#detail-title').innerText(),/AI Camera/);
   await page.locator('#internals-toggle').uncheck();assert.equal(await page.evaluate(()=>beecamViewer.inspect().assemblies.internals),false);await page.locator('#internals-toggle').check();
   await page.locator('#explode').fill('50');await page.locator('#explode').dispatchEvent('input');assert.equal(await page.evaluate(()=>beecamViewer.inspect().explode),.5);
@@ -57,5 +58,5 @@ try{
   await page.setViewportSize({width:760,height:850});await page.locator('[data-view="explore"]').click();
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'tablet horizontal overflow');
   assert.deepEqual(failures,[]);
-  console.log('PASS: rendering, geometry counts, selection/isolation, labels, hardware, explosion, camera presets, keyboard orbit, 34 drawings, CSV download, working enclosure/internal scopes and opening lid, mobile/tablet layout; no browser errors or failed requests.');
+  console.log('PASS: rendering, geometry counts, selection/isolation, labels, hardware, explosion, camera presets, keyboard orbit, 55 drawings, CSV download, working enclosure/internal scopes and opening lid, mobile/tablet layout; no browser errors or failed requests.');
 }finally{await browser.close();}

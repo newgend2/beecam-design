@@ -2,7 +2,7 @@
 
 A static assembly explorer for an open camera-trap design. The viewer documents
 the aluminum frame, imaging platform, weatherproof enclosure, internal acrylic
-plate and Raspberry Pi AI Camera. Other electronics are planned for the next pass.
+plate, Raspberry Pi AI Camera and internal electronics stack.
 
 **Viewer:** https://newgend2.github.io/beecam-design/
 
@@ -113,8 +113,7 @@ gland and camera fasteners move with it. The open angle is a display choice,
 not a claimed hinge limit. Shell walls, taper, mouldings, gland detail, support
 pads, camera spacers and internal installed heights remain illustrative. The
 camera uses the official 25 × 24 × 11.9 mm module envelope with simplified
-component geometry. Other control/power boards are intentionally deferred at the
-designer's request. Source photos are not published.
+component geometry. The internal electronics are now included as described below. Source photos are not published.
 
 ## Sources
 
@@ -144,10 +143,12 @@ python3 scripts/import-enclosure.py /path/to/source-folder
 node scripts/generate-drawings.mjs
 node scripts/generate-platform-drawings.mjs
 node scripts/generate-enclosure-drawings.mjs
+node scripts/generate-electronics-drawings.mjs
 node scripts/version-assets.mjs
 node scripts/version-assets.mjs --check
 node tests/data-checks.mjs
 node tests/enclosure-checks.mjs
+node tests/electronics-checks.mjs
 python3 scripts/audit-public.py
 ```
 
@@ -175,3 +176,50 @@ Three.js 0.180.0 is vendored under its MIT license in
 third-party products; their trademarks and manufacturer CAD remain their owners'.
 Supplied design geometry and artwork retain any original third-party notices;
 the viewer code license does not relicense commercial trap designs.
+
+## Internal electronics (revision 0.4)
+
+The lid carries the 3 mm acrylic, Pi Zero 2 W, Witty Pi 4 Mini, full-size
+DEV-14459 Qwiic HAT, SSD1306 OLED, DS3231 STEMMA QT RTC with CR1220, and AI Camera.
+Board mounting positions follow the supplied acrylic DXF. All parts follow lid
+opening and have independent selection and exploded offsets. The HAT projects
+outwards alongside the Pi and sits just beneath Witty Pi on the shared 2×20 header.
+
+Five Ø20 mm hook-and-loop **pairs** use ten adhesive dots. Their positions and
+compressed 3 mm thickness are approximate; black appearance follows the photos,
+while the supplied listing resolves to a white variant. Camera fasteners are
+four M2 screws, four M2 nuts, four M2.5 spacer nuts and four M2 washers.
+The RTC uses **two** mounting holes, matching Adafruit CAD and the photos, not
+all four candidate acrylic holes. Six underside M2.5 screws support Pi and RTC.
+OLED spacer/bolt count is provisionally two, inferred from the photos.
+
+Confirmed HELIFOUNER body lengths: acrylic→Pi 15 mm (four), Pi→Witty Pi 20 mm (two, opposite OLED), Witty Pi→OLED 10 mm (two). Pi and tall Witty standoffs have 6 mm male threads. Four 5 mm standoffs act as nuts: two on Pi at the OLED end, two on Witty at the other end. Acrylic→RTC remains an illustrative 10 mm. M2 hardware comes from the Kadrick 660-piece kit. Camera nut/washer
+stack is shown as 2.3 mm. These values are in electronicsParameters in data.js; confirmed sizes are distinguished from the remaining estimates.
+OLED PCB size (27 mm square), retention details, header height and all screw
+lengths require confirmation before procurement or fabrication.
+
+Two 200 mm JST SH connections are routed: HAT→RTC and HAT→OLED. The OLED end
+is stripped and soldered black/red/yellow/blue from left to right when viewed
+from the screen side with the pin edge at the top, as specified by the designer.
+The corrected BOM has two cables, confirmed by the designer.
+Cable curves document topology, not a measured 200 mm route. CSI uses an orange
+Pi Zero adapter ribbon; length is unspecified. The microSD card is 128 GB; its
+retail SD adapter is not mounted in the model. One OLED is used from a five-pack,
+and one CR1220 is used from a five-pack.
+
+Manufacturer sources checked 24 September 2026:
+
+- [Pi Zero 2 W mechanical drawing](https://datasheets.raspberrypi.com/rpizero2/raspberry-pi-zero-2-w-mechanical-drawing.pdf) — 65 × 30 mm, 58 × 23 mm nominal mounting pitch.
+- [UUGear Witty Pi 4 Mini STEP](https://www.uugear.com/repo/WittyPi4/WittyPi4Mini.step) — major package bounds measured with FreeCAD; display is simplified.
+- [SparkFun DEV-14459 Eagle files](https://github.com/sparkfun/Qwiic_Hat_for_Raspberry_Pi) — 52.324 × 22.987 mm board and connector layout. Manufacturer files retain their CC BY-SA 4.0 hardware license; linked, not redistributed.
+- [Adafruit DS3231 CAD](https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/5188%20DS3231%20RTC) and [Eagle PCB](https://github.com/adafruit/Adafruit-DS3231-Precision-RTC-Breakout-PCB) — board outline, two mounting holes and component envelopes.
+- [Hosyond OLED](https://www.amazon.com/dp/B09C5K91H7) — 0.96 inch SSD1306, 128 × 64, blue/yellow, five-pack; exact board dimensions unverified.
+- [20 mm hook-and-loop dots](https://www.amazon.com/dp/B07XHRYYXJ).
+
+The supplied stacking-header short link resolves to the enclosure, so no header
+purchase link is shown. The model follows the designer's 2×20 female-to-male
+connection description. Vendor CAD links are available on each relevant part.
+The geometry-only source manifest is docs/downloads/electronics-sources.json;
+inspect-electronics-cad.py reproduces STEP bounds using a FreeCAD Python runtime.
+Native sources and reference photos remain private; drawings and meshes are
+original simplified reference illustrations, not vendor fabrication models.
