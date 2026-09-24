@@ -1,6 +1,6 @@
 import {writeFile,mkdir} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
-import {parts,parameters as P,sourceURL} from '../docs/js/data.js';
+import {frameParts as parts,parameters as P,sourceURL} from '../docs/js/data.js';
 const out=fileURLToPath(new URL('../docs/',import.meta.url));
 await mkdir(out+'drawings',{recursive:true});await mkdir(out+'downloads',{recursive:true});
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;');
