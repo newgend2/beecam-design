@@ -1,7 +1,7 @@
 import * as THREE from '../vendor/three.module.js';
-import geometry from './platform-geometry.js?v=da3b2fb6589e';
-import {platformParameters as P} from './data.js?v=da3b2fb6589e';
-import cone from './cone-geometry.js?v=da3b2fb6589e';
+import geometry from './platform-geometry.js?v=c454cde96b62';
+import {platformParameters as P} from './data.js?v=c454cde96b62';
+import cone from './cone-geometry.js?v=c454cde96b62';
 
 export function panelShape(rear) {
   const {center:[cx,cy],radius:r}=geometry.platform.opening;

@@ -2,8 +2,8 @@
 export default {
   "drawings/aiCamera.svg": {
     "width": 1000,
-    "height": 500,
-    "revision": "8807a24d3159"
+    "height": 555,
+    "revision": "54280e336878"
   },
   "drawings/assembly.svg": {
     "width": 1200,
@@ -73,7 +73,7 @@ export default {
   "drawings/internalsAssembly.svg": {
     "width": 1000,
     "height": 930,
-    "revision": "d2cce8d597e9"
+    "revision": "05c396d4e38a"
   },
   "drawings/jstCables.svg": {
     "width": 1000,
@@ -138,7 +138,7 @@ export default {
   "drawings/piZero.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "2f842607e41d"
+    "revision": "9b8554b59fba"
   },
   "drawings/plate.svg": {
     "width": 900,
@@ -233,7 +233,7 @@ export default {
   "drawings/wittyPi.svg": {
     "width": 1000,
     "height": 640,
-    "revision": "d5544d11f775"
+    "revision": "a0496be95fcc"
   },
   "drawings/wittyStandoffs.svg": {
     "width": 1000,

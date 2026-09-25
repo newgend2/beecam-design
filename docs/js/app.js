@@ -1,6 +1,7 @@
-import drawingIndex from './drawing-index.js?v=da3b2fb6589e';
-import {parts,totalLength,sourceURL,materialSections,materialRows} from './data.js?v=da3b2fb6589e';
-import {createViewer} from './model.js?v=da3b2fb6589e';
+import drawingIndex from './drawing-index.js?v=c454cde96b62';
+import {parts,totalLength,sourceURL,materialSections,materialRows} from './data.js?v=c454cde96b62';
+import {createViewer} from './model.js?v=c454cde96b62';
+import {initFieldPhotos} from './field.js?v=c454cde96b62';
 const $=s=>document.querySelector(s);
 let viewer=null,selected=null,assembly='enclosure',inside=false;
 const names={frame:'Aluminum frame',platform:'Imaging platform',enclosure:'Weatherproof box',internals:'Acrylic + electronics'};
@@ -12,10 +13,12 @@ const drawingAssembly={frame:'assembly',platform:'platformAssembly',enclosure:'e
 function stats(rows){$('#detail-stats').innerHTML=rows.map(([k,v])=>`<div class="stat-row"><span>${k}</span><strong>${v}</strong></div>`).join('');}
 function setView(view,preserveAnchor=false){
   document.querySelector('.workspace').classList.toggle('materials-mode',view==='materials');
+  document.querySelector('.workspace').classList.toggle('field-mode',view==='field');
   document.body.dataset.view=view;
   if(!preserveAnchor)history.replaceState(null,'',location.pathname+location.search+(view==='explore'?'':`#${view}`));
   document.querySelectorAll('button[data-view]').forEach(b=>{const active=b.dataset.view===view;b.classList.toggle('active',active);b.setAttribute('aria-pressed',active);});
-  for(const n of ['explore','drawings','materials'])$(`#${n}-view`).hidden=n!==view;
+  for(const n of ['explore','drawings','materials','field'])$(`#${n}-view`).hidden=n!==view;
+  if(!preserveAnchor&&$('.view-tabs').getBoundingClientRect().top<0)$('.view-tabs').scrollIntoView({block:'start'});
 }
 function showDrawing(id){setView('drawings');requestAnimationFrame(()=>document.getElementById(`drawing-${id}`)?.scrollIntoView({behavior:'smooth',block:'center'}));}
 function selectAssembly(id){
@@ -104,7 +107,16 @@ $('#print-materials').onclick=()=>window.print();
 const drawingParts=Object.keys(names).flatMap(a=>[{id:drawingAssembly[a],code:order[a],name:names[a]+' layout',note:a==='enclosure'?'Lid ports follow the internal plate datums. Shell mouldings and wall thickness are schematic.':a==='internals'?'Board layout, standoff lengths and cable connections. Purchased component details and cable curves are schematic.':a==='frame'?'Front, side and plan views. Adjust the dashed upper-arm position in the stem slot.':'DXF plan geometry, opening, stepped seam and bolt-hole positions.'},...parts.filter(p=>p.assembly===a&&p.drawing!==false&&!['platformScrews','platformNuts','boxArmScrews','boxArmNuts'].includes(p.id))]);
 $('#drawing-grid').innerHTML=drawingParts.map(p=>`<article class="drawing-card" id="drawing-${p.id}"><figure><img src="${drawingFile(p)}" width="${drawingSize(p).width}" height="${drawingSize(p).height}" alt="Reference drawing: ${p.name}" loading="lazy"><figcaption><span>${p.code} · ${p.name}</span><a href="${drawingFile(p)}" download>SVG ↓</a></figcaption></figure><p>${p.note}${p.download&&p.kind!=='graphic'?` <a href="${p.download}" download>Download CAD</a>`:''}</p></article>`).join('');
 selectAssembly('enclosure');
+initFieldPhotos();
+function viewFromHash(){
 if(/^#materials/.test(location.hash)){
   setView('materials',true);
   requestAnimationFrame(()=>document.getElementById(location.hash.slice(1))?.scrollIntoView());
 }else if(location.hash==='#drawings')setView('drawings',true);
+else if(/^#field(?:-|$)/.test(location.hash)){
+  setView('field',true);
+  requestAnimationFrame(()=>document.getElementById(location.hash.slice(1))?.scrollIntoView());
+}else if(!location.hash)setView('explore',true);
+}
+viewFromHash();
+window.addEventListener('hashchange',viewFromHash);

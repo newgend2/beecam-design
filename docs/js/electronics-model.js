@@ -1,7 +1,8 @@
+import wittyCAD from './witty-cad-geometry.js?v=c454cde96b62';
 import * as THREE from '../vendor/three.module.js';
-import {electronicsParameters as E} from './data.js?v=da3b2fb6589e';
+import {electronicsParameters as E} from './data.js?v=c454cde96b62';
 // Board outlines use manufacturer dimensions; confirmed and estimated heights live in data.js.
-export function addElectronics({group,mesh,addLabel,plateY,centerZ,roundedRect,flat,hole,ring,cyl,box,cameraHoles,cameraY}){
+export function addElectronics({group,mesh,addLabel,plateY,centerZ,roundedRect,flat,hole,ring,cyl,box,cameraHoles,cameraY,cameraCableStart}){
  const material=(color,extra={})=>new THREE.MeshStandardMaterial({color,roughness:.48,...extra});
  const green=material(0x166a45),black=material(0x182224),red=material(0xb82037),blue=material(0x226a94),gold=material(0xc6a250,{metalness:.7}),silver=material(0xbac3c5,{metalness:.7}),white=material(0xe4ece5),glass=material(0x101d2a,{metalness:.3,roughness:.15});
  const top=plateY+3,z=centerZ,piX=-E.piCenterCAD[0],piZ=z+E.piCenterCAD[1],rtcX=-E.rtcCenterCAD[0],rtcZ=z+E.rtcCenterCAD[1];
@@ -23,17 +24,19 @@ export function addElectronics({group,mesh,addLabel,plateY,centerZ,roundedRect,f
  for(const [x,v]of padLocations){cyl(pads,10,1.4,[x,-.75,v],black);cyl(pads,10,1.4,[x,-2.25,v],black);}
  const pi=create('piZero',[piX,piY,piZ],[-25,-125,0],true,[-65,-25]);pcb(pi,30,65,piHoles,green);
  // Ports face inward toward the camera. CSI connector is at the rear short edge.
- box(pi,[12,1.8,13],[1,2.5,1],black);marking(pi,'RP3A0',9,3,[1,3.45,1]);
- for(const v of [-8,4]){box(pi,[6,3.2,8],[13,3.1,v],silver);box(pi,[.3,1.9,5.9],[16.1,3.2,v],black);}
- box(pi,[7,4.3,11],[12,3.6,22],silver);box(pi,[.3,2.6,8],[15.6,3.6,22],black);
- box(pi,[17,2.5,4],[0,2.85,-31],white);box(pi,[15,.6,1],[0,4.4,-32],black);
- box(pi,[13,1.6,13],[0,-.8,26],silver);
+ box(pi,[14,1.8,15],[.5,2.5,5.5],black);marking(pi,'RP3A0',9,3,[.5,3.45,5.5]);
+ box(pi,[12,1.3,12],[-1,2.25,-11.35],silver);
+ for(const v of E.piUSBFromLeft.map(d=>32.5-d)){box(pi,[6,3.2,8],[13,3.1,v],silver);box(pi,[.3,1.9,5.9],[16.1,3.2,v],black);}
+ box(pi,[7,4.3,11],[12,3.6,32.5-E.piHDMIFromLeft],silver);box(pi,[.3,2.6,8],[15.6,3.6,32.5-E.piHDMIFromLeft],black);
+ const piSocket=box(pi,[16,2,3.3],[0,2.6,-30.85],white);piSocket.name='pi-csi-socket';
+ box(pi,[15,.6,.7],[0,3.3,-32.15],black);
+ box(pi,[12,1.8,12.2],[-1.5,2.5,25],silver);
  // Pi male GPIO, with the separate female stacking connector fitted above it.
  box(pi,[5.08,2.54,50.8],[-11.5,2.87,0],black);
  for(let row=0;row<2;row++)for(let i=0;i<20;i++)box(pi,[.64,6,.64],[-12.77+row*2.54,7.1,(i-9.5)*2.54],gold);
  for(let i=0;i<13;i++){box(pi,[1.6,.6,1],[6,1.95,-23+i*3.2],silver);box(pi,[1,.8,1.4],[8,2.05,-22+i*3.2],black);}
  marking(pi,'ZERO 2 W',20,3,[0,1.7,-18]);
- const sd=create('microSD',[piX,piY-1.7,piZ+29],[-25,-117,24]);box(sd,[11,1,15],[0,0,0],black);box(sd,[10,.15,6],[0,-.57,3],red);marking(sd,'128',8,3,[0,.57,3]);
+ const sd=create('microSD',[piX-1.5,piY+2.3,piZ+29],[-25,-117,24]);box(sd,[11,1,15],[0,0,0],black);box(sd,[10,.15,6],[0,-.57,3],red);marking(sd,'128',8,3,[0,.57,3]);
  const piSupports=create('piStandoffs',[piX,top,piZ],[-25,-105,0]);
  for(const [x,v]of piHoles){hex(piSupports,x,0,v,E.piStandOff);cyl(piSupports,1.25,6,[x,E.piStandOff+3,v],gold);}
  const under=create('plateScrews',[0,plateY,z],[0,-75,0]);
@@ -43,14 +46,17 @@ export function addElectronics({group,mesh,addLabel,plateY,centerZ,roundedRect,f
  const posts=create('wittyStandoffs',[piX,piY+1.6,piZ],[-25,-145,0]);for(const [x,v]of piHoles.filter(p=>p[1]>0)){hex(posts,x,0,v,E.wittyStandOff);cyl(posts,1.25,6,[x,E.wittyStandOff+3,v],gold);}
  const retainers=create('stackRetainers',[piX,piY+1.6,piZ],[-25,-160,0]);
  for(const [x,v]of piHoles)hex(retainers,x,v<0?0:E.wittyStandOff+1.6,v,E.retainerLength);
- const witty=create('wittyPi',[piX,wittyY,piZ],[-25,-180,0],true,[-55,5]);pcb(witty,30,65,piHoles,black);
+ const witty=create('wittyPi',[piX,wittyY,piZ],[-25,-180,0],true,[-55,5]);
+ const cadMaterials={board:black,metal:silver,package:black,ceramic:material(0x95785b)};
+ for(const [name,m] of Object.entries(wittyCAD.meshes)){
+  const geometry=new THREE.BufferGeometry();
+  geometry.setAttribute('position',new THREE.Float32BufferAttribute(m.positions,3));geometry.setIndex(m.indices);geometry.computeVertexNormals();
+  const item=mesh(geometry,cadMaterials[name],witty,[0,0,0]);item.name='witty-step-'+name;
+ }
+ // The manufacturer's board STEP omits the fitted GPIO socket.
+ for(const [x,v] of piHoles)ring(witty,2.05,1.375,.08,[x,1.59,v],gold);
  box(witty,[5.1,3.5,50.8],[-11.5,3.35,0],black);
  for(let row=0;row<2;row++)for(let i=0;i<20;i++){box(witty,[1.1,.15,1.1],[-12.77+row*2.54,5.13,(i-9.5)*2.54],gold);box(witty,[.6,.16,.6],[-12.77+row*2.54,5.22,(i-9.5)*2.54],black);}
- // Major package envelopes follow the manufacturer's STEP component locations.
- for(const [cx,cv,w,d,h]of [[5.1,19.72,6,8.8,1.7],[-4.6,-12.37,4.9,5.78,1.45],[5.58,-3.17,5.78,4.9,1.45],[5.3,3.38,1.5,6.9,1.4]])box(witty,[w,h,d],[cx,1.6+h/2,cv],black);
- box(witty,[6.8,3.18,8.94],[12.5,3.19,-21.3],silver);box(witty,[.25,1.5,6.5],[16,3.2,-21.3],black);
- box(witty,[4.06,1.5,6.1],[.2,2.35,29.2],silver);box(witty,[2,1,2],[.2,3.6,29.2],gold);
- for(let i=0;i<12;i++){box(witty,[1,.6,1.8],[8,1.95,-10+i*2.6],silver);box(witty,[1.6,.6,.8],[4,1.95,-9+i*2.6],gold);}
  marking(witty,'WITTY PI 4 MINI',19,3,[2,1.75,11]);
  const header=create('stackHeader',[piX-11.5,piY+4.2,piZ],[-45,-153,0],false);
  const housingHeight=E.headerHeight-E.headerPinLength;
@@ -105,9 +111,12 @@ export function addElectronics({group,mesh,addLabel,plateY,centerZ,roundedRect,f
  for(let i=0;i<4;i++){const x=piX+(i-1.5)*2.54,ez=oledZ-12.4;ring(oled,1,.5,.1,[(i-1.5)*2.54,1.21,-12.4],gold);tube(wires,[[qx-10,qwiicY-1.5,piZ-4.572+i*.6],[qx-15-i*.5,piY+4,piZ-9],[piX+17+i,top+39,oledZ-2],[x,oledY+2,ez]],.38,material(wireColors[i]));}
  const ribbon=create('csiCable',[0,0,0],[25,-164,-5],false);
  addLabel('csiCable',ribbon,[4,top+55,z-8],[70,0]);
- const pts=[[0,cameraY+2.8,z+54],[0,top+15,z+30],[4,top+55,z-8],[-1,top+56,z-36],[piX,piY+7,piZ-37],[piX,piY+3,piZ-32]];
+ const piCableEnd=E.piCSIExit.map((v,i)=>v+[piX,piY,piZ][i]);
+ // Straight lead-ins leave both sockets before the free ribbon bends upward.
+ const pts=[cameraCableStart,[cameraCableStart[0],cameraCableStart[1],cameraCableStart[2]-5],[4,top+35,z+13],[4,top+55,z-10],[-1,top+56,z-36],[piX,piY+13,piZ-41],[piCableEnd[0],piCableEnd[1],piCableEnd[2]-5],piCableEnd];
  const curve=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(...p))),positions=[],uv=[],indices=[];
  for(let i=0;i<=90;i++){const p=curve.getPoint(i/90),w=16-(i/90)*4;positions.push(p.x-w/2,p.y,p.z,p.x+w/2,p.y,p.z);uv.push(0,i/90,1,i/90);if(i<90){const a=i*2;indices.push(a,a+1,a+2,a+1,a+3,a+2);}}
+ ribbon.userData.endpoints={camera:cameraCableStart,pi:piCableEnd};
  const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geo.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));geo.setIndex(indices);geo.computeVertexNormals();mesh(geo,material(0xd88c1a,{side:THREE.DoubleSide,metalness:.25}),ribbon,[0,0,0]);
  for(let i=0;i<8;i++){const d=(i-3.5)*1.1;tube(ribbon,pts.map(p=>[p[0]+d,p[1]+.07,p[2]]),.055,gold);}
  return {piY,wittyY,qwiicY,rtcY,oledY,velcroPairs:5,rtcStandoffs:2,tallSupports:2,retainers:4,oledWireOrder:['black','red','yellow','blue'],routedJstCables:2};

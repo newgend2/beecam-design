@@ -1,7 +1,7 @@
-import {addElectronics} from './electronics-model.js?v=da3b2fb6589e';
+import {addElectronics} from './electronics-model.js?v=c454cde96b62';
 import * as THREE from '../vendor/three.module.js';
-import G from './enclosure-geometry.js?v=da3b2fb6589e';
-import {enclosureParameters as P} from './data.js?v=da3b2fb6589e';
+import G from './enclosure-geometry.js?v=c454cde96b62';
+import {enclosureParameters as P,aiCameraParameters as A} from './data.js?v=c454cde96b62';
 
 export function plateShape(data){
   const shape=new THREE.Shape(data.outline.map(p=>new THREE.Vector2(...p)));
@@ -75,14 +75,27 @@ export function addEnclosure({partGroup,mesh,bolt,addLabel}){
   const c=G.lidPorts.camera.center;
   const boardBottom=plateY+3+P.cameraStandOffIllustrative;
   const camera=group('aiCamera',[-c[0],boardBottom,z+c[1]],[0,-135,-15],true);
-  const board=roundedRect(25,24,2);
-  // Inner hole row is the optical-axis datum, per the designer.
-  for(const h of cameraHoles)hole(board,h.center[0]-c[0],h.center[1]-c[1]-3.5,1.1);
-  flat(board,1.12,camera,[0,0,3.5],green);
-  for(const h of cameraHoles)ring(camera,2.1,1.1,.08,[-h.center[0],1.12,h.center[1]-c[1]],gold);
-  box(camera,[12,5,19.5],[0,-2.5,4.7],black);cyl(camera,4.5,5.5,[0,-7.75,0]);cyl(camera,3.3,.18,[0,-10.58,0],material(0x253b58,{metalness:.5,roughness:.12}));
-  box(camera,[18,2.5,4],[0,2.35,13],white);box(camera,[6,1,5],[6,1.6,-5],black);
-  const electronics=addElectronics({group,mesh,addLabel,plateY,centerZ:z,roundedRect,flat,hole,ring,cyl,box,cameraHoles,cameraY:boardBottom});
+  const boardCentreZ=A.lensFromOuterEdge-A.depth/2;
+  const board=roundedRect(A.width,A.depth,2);
+  for(const h of cameraHoles)hole(board,h.center[0]-c[0],h.center[1]-c[1]-boardCentreZ,A.holeDiameter/2);
+  flat(board,A.pcbThickness,camera,[0,0,boardCentreZ],green);
+  for(const h of cameraHoles)ring(camera,2.1,1.1,.08,[-h.center[0],A.pcbThickness,h.center[1]-c[1]],gold);
+  // The sensor subassembly is on the lens side (toward the lid).
+  const base=A.opticalBaseThickness;
+  box(camera,[A.opticalBaseWidth,base,A.opticalBaseDepth],[0,-base/2,3.75],black);
+  box(camera,[A.lensHousingWidth,A.lensHousingProjection,A.lensHousingDepth],[0,-base-A.lensHousingProjection/2,0],black);
+  const barrel=A.lensProjection-A.lensHousingProjection;
+  cyl(camera,A.lensDiameter/2,barrel,[0,-base-A.lensHousingProjection-barrel/2,0]);
+  cyl(camera,A.apertureDiameter/2,.08,[0,-base-A.lensProjection-.04,0],material(0x253b58,{metalness:.5,roughness:.12}));
+  // Back-side FPC socket exits toward the plate centre, opposite the outer row.
+  const connectorY=A.pcbThickness+A.connectorHeight/2;
+  const socket=box(camera,[A.connectorWidth,A.connectorHeight,A.connectorDepth],[0,connectorY,A.connectorExitZ+A.connectorDepth/2],white);
+  socket.name='camera-csi-socket';
+  box(camera,[A.connectorWidth,.65,.7],[0,A.pcbThickness+A.connectorHeight-.325,A.connectorExitZ+.35],black);
+  box(camera,[5,.9,5],[5,A.pcbThickness+.45,7],black);
+  box(camera,[3,.8,3],[-5,A.pcbThickness+.4,5],black);
+  const cameraCableStart=[-c[0],boardBottom+connectorY,z+c[1]+A.connectorExitZ];
+  const electronics=addElectronics({group,mesh,addLabel,plateY,centerZ:z,roundedRect,flat,hole,ring,cyl,box,cameraHoles,cameraY:boardBottom,cameraCableStart});
   addLabel('boxBody',body,[65,backY-25,z],[60,-25]);addLabel('boxMount',mount,[-55,backY+3,z+70],[-65,-30]);
   addLabel('boxLid',lid,[-55,lidY,z+45],[-60,25]);addLabel('sideBulkhead',cap,[95,backY-39,z],[50,20]);
   addLabel('lidGland',gland,[-cable[0],lidY-15,z+cable[1]],[-35,30]);

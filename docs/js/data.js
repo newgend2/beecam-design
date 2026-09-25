@@ -1,6 +1,6 @@
-import C from './cone-geometry.js?v=da3b2fb6589e';
-import G from './platform-geometry.js?v=da3b2fb6589e';
-import E from './enclosure-geometry.js?v=da3b2fb6589e';
+import C from './cone-geometry.js?v=c454cde96b62';
+import G from './platform-geometry.js?v=c454cde96b62';
+import E from './enclosure-geometry.js?v=c454cde96b62';
 // Dimensions are millimetres. User measurements and photo inferences stay separate.
 export const parameters = {
   profile: 20,
@@ -83,16 +83,16 @@ export const enclosureParts = [
 ];
 export const internalParts = [
   {"id":"piPlate","code":"E1","name":"Internal acrylic Pi plate","qty":1,"kind":"acrylic","dims":"128.499 × 128.499 × 3 mm","basis":"Acrylic design DXF","download":"downloads/internal-plate-mm.dxf","note":"3 mm acrylic plate with thirteen circular holes and three rectangular cutouts. Large cable clearance is Ø31.75 mm; camera holes are Ø2 mm on a 21 × 12.5 mm pattern. Centre the plate in the lid and attach it with five Ø20 mm hook-and-loop pairs."},
-  {"id":"aiCamera","code":"E2","name":"Raspberry Pi AI Camera","qty":1,"kind":"purchased","dims":"25 × 24 × 11.9 mm module","basis":"Official module envelope · schematic detail","source":"https://www.raspberrypi.com/products/ai-camera/","note":"The lens faces down through the lid, directly over the vane centre. The acrylic hole pattern locates the module. Board components and lens body are simplified; the reference envelope is 25 × 24 × 11.9 mm."},
+  {"id":"aiCamera","code":"E2","name":"Raspberry Pi AI Camera","qty":1,"kind":"purchased","dims":"25 × 24 × 11.9 mm module","basis":"Manufacturer physical specification","source":"https://www.raspberrypi.com/products/ai-camera/","note":"The lens faces down through the lid, directly over the vane centre. The acrylic hole pattern locates the module. Board outline, mounting holes, optical assembly and inward-facing CSI connector follow the manufacturer physical specification. Small electronic components are schematic; nominal module envelope is 25 × 24 × 11.9 mm."},
   {"id":"cameraScrews","code":"E3","name":"Camera M2 screws","qty":4,"kind":"hardware","dims":"M2","basis":"Assembly specification + DXF holes","note":"Four M2 screws and nuts hold the camera. Place one M2.5 nut and one M2 washer between the acrylic and PCB at each mounting point. Select screws from the Kadrick 660-piece kit with enough length to engage the retaining nuts."},
   {"id":"cameraNuts","code":"E4","name":"Camera M2 nuts","qty":4,"kind":"hardware","dims":"M2","basis":"Assembly specification","note":"One retaining nut per camera screw. Threaded on the electronics side of the camera."},
   {"id":"cameraSpacerNuts","code":"E5","name":"Camera spacer nuts","qty":4,"kind":"hardware","dims":"M2.5 nuts used as spacers","basis":"Assembly specification","note":"One M2.5 nut around each M2 screw, between the acrylic and camera board. These nuts act as spacers; separate M2 nuts retain the screws."},
   {"id":"cameraWashers","code":"E6","name":"Camera spacer washers","qty":4,"kind":"hardware","dims":"M2 washers","basis":"Assembly specification","note":"One M2 washer at each camera mounting point, between the spacer nut and PCB."},
   {"id":"velcro","code":"E7","name":"Circular hook-and-loop pairs","qty":5,"kind":"hardware","dims":"5 pairs · Ø20 mm · black","basis":"Assembly specification","note":"Five paired connections attach the acrylic to the lid: ten adhesive dots. The build uses black dots. The linked white Ø20 mm alternative can serve the same attachment role. Pad placement and compressed thickness are schematic.","source":"https://www.amazon.com/dp/B07XHRYYXJ"},
-  {"id":"piZero","code":"E8","name":"Raspberry Pi Zero 2 W","qty":1,"kind":"purchased","dims":"65 × 30 mm PCB","basis":"Official mechanical drawing","note":"Pre-soldered 40-pin GPIO version. Mounted on four brass standoffs at the acrylic Pi hole pattern. Nominal board mounting pitch is 58 × 23 mm; acrylic design pitch is 57.988 × 23.012 mm. Component bodies are simplified.","source":"https://www.adafruit.com/product/6008"},
+  {"id":"piZero","code":"E8","name":"Raspberry Pi Zero 2 W","qty":1,"kind":"purchased","dims":"65 × 30 mm PCB","basis":"Official mechanical drawing","note":"Pre-soldered 40-pin GPIO version. Mounted on four brass standoffs at the acrylic Pi hole pattern. Nominal board mounting pitch is 58 × 23 mm; acrylic design pitch is 57.988 × 23.012 mm. USB centres and board outline follow the official drawing. Component bodies and GPIO header are reference geometry.","source":"https://www.adafruit.com/product/6008"},
   {"id":"piStandoffs","code":"E9","name":"Pi brass standoffs","qty":4,"kind":"hardware","dims":"15 mm body + 6 mm male thread","basis":"HELIFOUNER standoff kit","note":"Four HELIFOUNER brass standoffs support the Pi 15 mm above the acrylic. Each has a 6 mm male thread. M2.5 screws secure them from under the acrylic. The OLED end uses 5 mm standoffs as retaining nuts; the opposite end threads into the 20 mm supports."},
   {"id":"plateScrews","code":"E10","name":"Underside M2.5 screws","qty":6,"kind":"hardware","dims":"M2.5 × 6 mm","basis":"4 Pi + 2 RTC mounting points","note":"Six screws from the HELIFOUNER 242-piece kit secure the standoffs from beneath the acrylic: four for the Pi and two for the RTC."},
-  {"id":"wittyPi","code":"E11","name":"Witty Pi 4 Mini","qty":1,"kind":"purchased","dims":"65 × 30 mm nominal PCB","basis":"UUGear STEP + product dimensions","note":"Power scheduler above the Pi, supported by two 20 mm brass standoffs at the end opposite the OLED. The shared GPIO header connects it through the Qwiic HAT to the Pi. Major component envelopes follow the UUGear STEP model.","source":"https://www.uugear.com/product/witty-pi-4-mini/"},
+  {"id":"wittyPi","code":"E11","name":"Witty Pi 4 Mini","qty":1,"kind":"purchased","dims":"65 × 30 mm nominal PCB","basis":"Manufacturer STEP geometry","note":"Power scheduler above the Pi, supported by two 20 mm brass standoffs at the end opposite the OLED. The shared GPIO header connects it through the Qwiic HAT to the Pi. The PCB and 184 component solids are tessellated from UUGear’s STEP model. Display colours and the fitted GPIO socket are added for the assembly view.","source":"https://www.uugear.com/product/witty-pi-4-mini/"},
   {"id":"wittyStandoffs","code":"E12","name":"Pi-to-Witty brass standoffs","qty":2,"kind":"hardware","dims":"20 mm body + 6 mm male thread","basis":"HELIFOUNER standoff kit","note":"Two HELIFOUNER 20 mm brass supports at the end opposite the OLED. Their 6 mm male threads pass through Witty Pi and receive 5 mm standoffs as retaining nuts. There are no tall supports at the OLED end of the Pi."},
   {"id":"stackHeader","code":"E13","name":"Frienda 2×20 extra-tall stacking header","qty":1,"kind":"purchased","dims":"51 × 5 × 23 mm · 2.54 mm pitch","basis":"Product dimension diagram","note":"One header from an eight-pack. Female sockets fit the Pi GPIO pins; 12 mm male pins pass through the Qwiic HAT into Witty Pi. Overall envelope: 51 × 5 × 23 mm. Pin spacing: 2.54 mm; pin thickness: approximately 0.6 mm.","source":"https://www.amazon.com/dp/B084Q4W1PW"},
   {"id":"qwiicHat","code":"E14","name":"SparkFun Qwiic HAT DEV-14459","qty":1,"kind":"purchased","dims":"52.324 × 22.987 mm PCB","basis":"Official SparkFun Eagle board","note":"Full-size DEV-14459 Qwiic HAT, with four JST SH ports. Shares the 2×20 pins just under Witty Pi and projects outwards beside the Pi. This is the specified HAT, not the Qwiic pHAT. Outline and connector positions come from SparkFun CAD.","source":"https://www.sparkfun.com/sparkfun-qwiic-hat-for-raspberry-pi.html"},
@@ -107,9 +107,21 @@ export const internalParts = [
   {"id":"csiCable","code":"E23","name":"Orange CSI camera ribbon","qty":1,"kind":"included","dims":"Pi Zero camera adapter ribbon","basis":"Included with AI Camera","note":"Use the camera-package ribbon with a 22-pin Pi Zero end and 15-pin camera end. Connect the AI Camera to the Pi Zero CSI socket. The orange ribbon route is shown schematically; no separate cable purchase is required.","source":"https://www.raspberrypi.com/products/ai-camera/"},
   {"id":"stackRetainers","code":"E24","name":"5 mm brass retaining standoffs","qty":4,"kind":"hardware","dims":"5 mm body · HELIFOUNER","basis":"Assembly specification","note":"Two 5 mm standoffs act as nuts on the Pi at the OLED end. Two more retain Witty Pi on the tall supports at the opposite end. Threaded portions are schematic; the model shows the 5 mm hex bodies."},
 ];
-export const parts = [...frameParts.map(p=>({...p,assembly:'frame'})),...platformParts.map(p=>({...p,assembly:'platform'})),...enclosureParts.map(p=>({...p,assembly:'enclosure'})),...internalParts.map(p=>({...p,assembly:'internals',cadSource:({piZero:'https://datasheets.raspberrypi.com/rpizero2/raspberry-pi-zero-2-w-mechanical-drawing.pdf',wittyPi:'https://www.uugear.com/repo/WittyPi4/WittyPi4Mini.step',qwiicHat:'https://github.com/sparkfun/Qwiic_Hat_for_Raspberry_Pi',rtc:'https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/5188%20DS3231%20RTC'})[p.id]}))];
+export const parts = [...frameParts.map(p=>({...p,assembly:'frame'})),...platformParts.map(p=>({...p,assembly:'platform'})),...enclosureParts.map(p=>({...p,assembly:'enclosure'})),...internalParts.map(p=>({...p,assembly:'internals',cadSource:({aiCamera:'https://datasheets.raspberrypi.com/camera/ai-camera-product-brief.pdf',piZero:'https://datasheets.raspberrypi.com/rpizero2/raspberry-pi-zero-2-w-mechanical-drawing.pdf',wittyPi:'https://www.uugear.com/repo/WittyPi4/WittyPi4Mini.step',qwiicHat:'https://github.com/sparkfun/Qwiic_Hat_for_Raspberry_Pi',rtc:'https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/5188%20DS3231%20RTC'})[p.id]}))];
 export const totalLength = frameParts.filter(p=>p.kind==='extrusion').reduce((sum,p)=>sum+p.length*p.qty,0);
 export const sourceURL = sku => `https://8020.net/${sku}.html`;
+
+// AI Camera physical specification, product brief page 4. Lens / inner hole
+// row is local Z=0; +Z points toward the outer mounting-hole row. Units mm.
+export const aiCameraParameters = {
+ width:25,depth:23.862,pcbThickness:1.12,lensFromOuterEdge:14.5,
+ holePitchX:21,holePitchZ:12.5,holeDiameter:2.2,
+ connectorWidth:19.61,connectorDepth:5.71,connectorHeight:2.75,
+ connectorExitZ:14.5-23.862,
+ opticalBaseWidth:12.8,opticalBaseDepth:19.5,opticalBaseThickness:1,
+ lensHousingWidth:12,lensHousingDepth:12.5,lensHousingProjection:3.875,
+ lensProjection:6.98,lensDiameter:5.75,apertureDiameter:4.75,
+};
 
 // Installed spacer body lengths. Units mm.
 export const electronicsParameters = {
@@ -118,6 +130,7 @@ export const electronicsParameters = {
  pcbThickness:1.6,velcroDiameter:20,velcroCount:5,
  headerLength:51,headerWidth:5,headerHeight:23,headerPinLength:12,headerPinWidth:0.6,headerPitch:2.54,
  qwiicWidth:52.324,qwiicDepth:22.987,oledSize:27,
+ piUSBFromLeft:[41.4,54],piHDMIFromLeft:12.4,piCSIExit:[0,2.5,-32.5],
  piAndWittyAndOledHeightsConfirmed:true,rtcHeightConfirmed:true,
 };
 

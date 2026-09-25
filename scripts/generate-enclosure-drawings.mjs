@@ -1,6 +1,6 @@
 import {writeFile} from 'node:fs/promises';
 import G from '../docs/js/enclosure-geometry.js';
-import {enclosureParameters as P} from '../docs/js/data.js';
+import {enclosureParameters as P,aiCameraParameters as A} from '../docs/js/data.js';
 const out=new URL('../docs/drawings/',import.meta.url);
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;');
 const t=(x,y,s,cl='label',anchor='start')=>`<text x="${x}" y="${y}" class="${cl}" text-anchor="${anchor}">${esc(s)}</text>`;
@@ -59,10 +59,13 @@ for(const [id,title,sub,lines]of [
   lines.forEach((line,i)=>v+=t(430,155+i*45,line));
   v+=t(90,345,'Schematic hardware silhouette; not a manufacturing drawing.','small');await put(id,title,sub,v,430);
 }
-let cam=rect(120,160,250,240,20);
+let cam=rect(120,160,A.width*10,A.depth*10,20);
 for(const x of [140,350])for(const y of [180,305])cam+=circle(x,y,11);
-cam+=rect(185,245,120,120,4)+circle(245,305,45)+circle(245,305,28);
-cam+=dh(120,370,115,160,'25')+dv(160,400,80,120,'24');
-cam+=t(470,155,'Module envelope: 25 × 24 × 11.9')+t(470,195,'Four board mounting holes: Ø2.2 nominal')+t(470,235,'Plate holes: Ø2 from design DXF')+t(470,275,'Pitch: 21 × 12.5')+t(470,335,'Optical axis follows the inner-row midpoint datum.')+t(470,375,'Components and lens body are schematic.');
-await put('aiCamera','E2 / Raspberry Pi AI Camera','Reference envelope from Raspberry Pi; installed position from acrylic CAD',cam,500);
+cam+=rect(181,198.75,128,195,0)+rect(185,242.5,120,125,0)+circle(245,305,A.lensDiameter*5)+circle(245,305,A.apertureDiameter*5);
+cam+=rect(245-A.connectorWidth*5,160+(A.depth-A.connectorDepth)*10,A.connectorWidth*10,A.connectorDepth*10,0,'dash');
+cam+=dh(120,370,115,160,'25')+dv(160,160+A.depth*10,80,120,'23.862 reference');
+cam+=t(470,155,'Nominal envelope: 25 × 24 × 11.9')+t(470,191,'PCB: 1.12 thick; 4 × Ø2.2 holes')+t(470,227,'Hole pitch: 21 × 12.5; first row 2 from edge')+t(470,263,'Lens axis: 14.5 from the outer board edge')+t(470,299,'Lens barrel Ø5.75; aperture Ø4.75');
+cam+=t(470,344,'Dashed: back-side CSI connector')+t(470,376,'19.61 wide × 5.71 deep × 2.75 high')+t(470,408,'Cable exits toward the acrylic plate centre.');
+cam+=t(120,449,'LENS-SIDE VIEW · dashed connector is on reverse','small')+t(120,480,'Manufacturer reference dimensions; component details are schematic.','small');
+await put('aiCamera','E2 / Raspberry Pi AI Camera','Physical specification: Raspberry Pi AI Camera product brief, page 4',cam,555);
 console.log('Generated enclosure, port, acrylic and camera reference drawings.');

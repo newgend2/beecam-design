@@ -1,5 +1,5 @@
 import {writeFile} from 'node:fs/promises';
-import {internalParts,electronicsParameters as E} from '../docs/js/data.js';
+import {internalParts,electronicsParameters as E,aiCameraParameters as A} from '../docs/js/data.js';
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const text=(x,y,s,c='label',anchor='start')=>`<text x="${x}" y="${y}" class="${c}" text-anchor="${anchor}">${esc(s)}</text>`;
 const line=(x,y,a,b,c='edge')=>`<line x1="${x}" y1="${y}" x2="${a}" y2="${b}" class="${c}"/>`;
@@ -57,7 +57,7 @@ let b=text(60,110,'ACRYLIC PLAN · electronics side')+text(590,110,'STACK SECTIO
 const k=2.7,cx=260,cy=325;
 b+=rect(cx-64.25*k,cy-64.25*k,128.5*k,128.5*k,'#edf5f6',12);
 const boardPlan=(x,v,w,d,color,label)=>rect(cx+x*k-w*k/2,cy+v*k-d*k/2,w*k,d*k,color,4)+text(cx+x*k,cy+v*k,label,'small','middle');
-b+=boardPlan(-28.2067,21.0312,30,65,'#badcc7','Pi / Witty')+boardPlan(-46.9832,21.0312,22.987,52.324,'#efc5cd','HAT')+boardPlan(-28.2067,3.5312,27,27,'#c3dceb','OLED')+boardPlan(36.3347,-45.2247,25.4,17.78,'#c6d0d4','RTC')+boardPlan(0,44.532,25,24,'#badcc7','Camera');
+b+=boardPlan(-28.2067,21.0312,30,65,'#badcc7','Pi / Witty')+boardPlan(-46.9832,21.0312,22.987,52.324,'#efc5cd','HAT')+boardPlan(-28.2067,3.5312,27,27,'#c3dceb','OLED')+boardPlan(36.3347,-45.2247,25.4,17.78,'#c6d0d4','RTC')+boardPlan(0,41.032019625+A.lensFromOuterEdge-A.depth/2,A.width,A.depth,'#badcc7','Camera');
 b+=circle(cx-37.3253*k,cy-37.3253*k,15.875*k)+text(cx-37.3253*k,cy-37.3253*k,'Gland','small','middle');
 for(const [x,v]of [[-13,-53],[53,-53],[53,0],[53,53],[-53,53]])b+=circle(cx+x*k,cy+v*k,10*k,'#3b4247');
 b+=dh(cx-64.25*k,cx+64.25*k,538,499,'128.499')+text(70,577,'5 × Ø20 hook-and-loop pairs; pad locations approximate.','small');

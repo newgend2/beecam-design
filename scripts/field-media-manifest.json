@@ -1,0 +1,32 @@
+{
+  "media/field-woodland.jpg": {
+    "sha256": "55d9e3aa646fdf23f503407ab9aed5607bffba07b8089f24b997fb23789f96c5",
+    "width": 2200,
+    "height": 1650
+  },
+  "media/field-solar.jpg": {
+    "sha256": "0bd8906ffb4ac2c725ac33d1328854edc74aa843ce3949049fb7bfad528d31a9",
+    "width": 2200,
+    "height": 1650
+  },
+  "media/blue-vane.jpg": {
+    "sha256": "cb6320dd6631289111cffd3e1562668256f5f9e4354c241a74a89eb1bacc53c5",
+    "width": 1200,
+    "height": 1600
+  },
+  "media/camera-visitor.jpg": {
+    "sha256": "7418b911139c68f6df1a3ec4c81cf8bc4689a27328dba254984a142b119fbf16",
+    "width": 2200,
+    "height": 1649
+  },
+  "media/camera-aruco.png": {
+    "sha256": "b8bbbd2bacc459957973d8662d8b1beb6d9e7a8a3434acf656539d6e6746f7eb",
+    "width": 279,
+    "height": 272
+  },
+  "media/flower-prototype.jpg": {
+    "sha256": "d48cb9b9fd01386d18a607502c7d339af3ef59e024d5c5b84d077e38a19e2b96",
+    "width": 2304,
+    "height": 1296
+  }
+}

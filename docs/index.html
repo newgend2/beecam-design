@@ -5,8 +5,8 @@
   <title>BeeCam · Assembly explorer</title>
   <meta name="description" content="Explore the BeeCam frame, imaging platform and enclosure, labelled assemblies, dimensioned drawings, and materials.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a323e'/%3E%3Cpath d='M9 25V7h14M9 22h14v4' fill='none' stroke='%23f1bd48' stroke-width='3'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css?v=da3b2fb6589e">
-  <script type="module" src="js/app.js?v=da3b2fb6589e"></script>
+  <link rel="stylesheet" href="style.css?v=c454cde96b62">
+  <script type="module" src="js/app.js?v=c454cde96b62"></script>
 </head>
 <body>
   <header class="header"><a class="brand" href="./"><span class="brand-mark" aria-hidden="true">B</span>BeeCam <span class="brand-sub">Assembly explorer</span></a><span class="revision">DESIGN · REV 1.0</span></header>
@@ -27,7 +27,7 @@
         <div class="assembly-meta"><span>Enclosure envelope</span><strong>150 × 150 × 90 <small>mm</small></strong><span>All dimensions in millimetres</span></div>
       </aside>
       <section class="main-panel" aria-label="Camera assembly explorer">
-        <nav class="view-tabs" aria-label="Documentation views"><button class="active" data-view="explore" aria-pressed="true">3D assembly</button><button data-view="drawings" aria-pressed="false">Drawings</button><button data-view="materials" aria-pressed="false">Parts list <span>63</span></button></nav>
+        <nav class="view-tabs" aria-label="Documentation views"><button class="active" data-view="explore" aria-pressed="true">3D assembly</button><button data-view="drawings" aria-pressed="false">Drawings</button><button data-view="materials" aria-pressed="false">Parts list <span>63</span></button><button data-view="field" aria-pressed="false">Field setup</button></nav>
         <div id="explore-view" class="view-content">
           <div class="viewer" id="viewer"><div class="viewer-heading"><span class="eyebrow" id="viewer-eyebrow">02 / IMAGING PLATFORM</span><span class="model-status">Assembly reference</span></div><div id="canvas-host" tabindex="0" role="img" aria-label="Interactive 3D camera assembly and enclosure. Drag to rotate, scroll to zoom. Use the part list and view buttons for keyboard access."></div><div id="part-labels"></div><div class="viewer-toolbar"><div class="camera-buttons" aria-label="Camera views"><button data-camera="iso" class="active" aria-pressed="true">3D</button><button data-camera="front" aria-pressed="false">Front</button><button data-camera="side" aria-pressed="false">Side</button><button data-camera="top" aria-pressed="false">Top</button></div><button id="reset-view" title="Reset view">↺ <span>Reset</span></button></div><div class="viewer-bottom"><span>Drag to orbit · scroll to zoom</span><span>Y ↑ &nbsp; mm</span></div><div id="viewer-error" hidden><p>The 3D view needs WebGL.</p><button id="fallback-drawings">Open dimensioned drawings</button></div></div>
           <div class="assembly-visibility"><span>Show</span><label><input id="frame-toggle" type="checkbox" checked> Frame</label><label><input id="platform-toggle" type="checkbox" checked> Platform</label><label><input id="enclosure-toggle" type="checkbox" checked> Box</label><label><input id="internals-toggle" type="checkbox" checked> Acrylic + electronics</label><label><input id="pattern-toggle" type="checkbox" checked> Sticker pattern</label></div><div class="viewer-options"><label><input id="lid-toggle" type="checkbox"> Open lid</label><label><input id="labels-toggle" type="checkbox" checked> Part labels</label><label><input id="hardware-toggle" type="checkbox" checked> Hardware</label><label class="explode-control">Explode <input id="explode" type="range" min="0" max="100" value="0" aria-label="Explode assembly"><output id="explode-value">0%</output></label></div>
@@ -45,11 +45,80 @@
           <div id="material-groups"></div>
           <p class="source-note">Product links, installed quantities and package contents are listed for each item. Sources checked 24 September 2026. Prices and stock are not tracked.</p>
         </div>
+        <div id="field-view" class="view-content" hidden>
+          <nav class="field-navigation" aria-label="Field guide sections">
+            <a href="#field-lure">01 <span>The blue vane</span></a><a href="#field-history">02 <span>Earlier designs</span></a><a href="#field-station">03 <span>In the field</span></a><a href="#field-images">04 <span>Through the camera</span></a><a href="#field-questions">05 <span>Questions</span></a>
+          </nav>
+          <section class="field-section field-hero" id="field-lure" aria-labelledby="field-lure-title">
+            <div class="field-hero-copy">
+              <p class="eyebrow">01 / THE VISUAL LURE</p>
+              <h2 id="field-lure-title">What is a <br>blue vane trap?</h2>
+              <p class="field-lead">Two crossed blue panels attract insect visitors. A funnel below the vanes leads into a collection jar in a conventional trap.</p>
+              <p>Researchers use blue vane traps to sample wild bees. BeeCam keeps the blue visual lure to attract bumble bees, with other insects visiting too.</p>
+              <div class="field-highlight"><span class="field-dot" aria-hidden="true"></span><div><strong>Our adaptation is non-lethal.</strong><p>Acrylic inserts block the drop through the funnel. The collection jar is removed, and an overhead camera photographs visitors. Bees are free to leave.</p></div></div>
+              <a class="field-source" href="https://www.bluevanetraps.com/methods" target="_blank" rel="noopener">About the original trap · BanfieldBio ↗</a>
+            </div>
+            <figure class="field-figure field-trap-photo">
+              <button class="field-photo" data-photo="trap" aria-label="Enlarge blue vane trap photo"><img src="media/blue-vane.jpg" width="1200" height="1600" alt="Two crossed blue plastic vanes above a blue funnel, shown without a collection jar."><span class="photo-enlarge" aria-hidden="true">↗ Enlarge</span></button>
+              <figcaption><strong>The blue vanes and funnel</strong><span>The purchased trap’s upper assembly. The collection jar is not used in BeeCam.</span></figcaption>
+            </figure>
+            <div class="field-process" aria-label="How BeeCam works">
+              <div><span class="field-step">1</span><strong>Attract</strong><p>The blue vanes provide a visual lure.</p></div>
+              <div><span class="field-step">2</span><strong>Photograph</strong><p>Visitors land on the platform or inserts beneath the camera.</p></div>
+              <div><span class="field-step">3</span><strong>Leave freely</strong><p>The open design lets insects fly away.</p></div>
+            </div>
+          </section>
+          <section class="field-section" id="field-history" aria-labelledby="field-history-title">
+            <div class="field-section-heading"><div><p class="eyebrow">02 / EARLIER DESIGNS</p><h2 id="field-history-title">From flower shapes to the full vane</h2></div><p>Earlier iterations explored flower-shaped visual lures.</p></div>
+            <div class="field-camera-gallery">
+              <figure class="field-figure"><button class="field-photo" data-photo="flower" aria-label="Enlarge earlier flower-shaped lure design"><img src="media/flower-prototype.jpg" width="2304" height="1296" alt="Earlier flower-shaped lure with five blue petals around a yellow centre on a platform, with a bee flying nearby." loading="lazy"><span class="photo-enlarge" aria-hidden="true">↗ Enlarge</span></button><figcaption><strong>An earlier flower-shaped prototype</strong><span>Blue petals surround a yellow centre. This design preceded the full blue vane used in the current BeeCam.</span></figcaption></figure>
+              <div class="field-history-note"><h3>Why the change?</h3><p>The flowered designs were later replaced by the full blue vane to increase the lure’s visibility to insects.</p><div class="field-highlight"><div><strong>Current design: the full vane</strong><p>BeeCam combines the full blue vane with the non-lethal stopper inserts and an overhead camera.</p></div></div><a class="field-source" href="#field-lure">See the current blue vane ↑</a></div>
+            </div>
+          </section>
+          <section class="field-section" id="field-station" aria-labelledby="field-station-title">
+            <div class="field-section-heading"><div><p class="eyebrow">03 / IN THE FIELD</p><h2 id="field-station-title">A camera station in the landscape</h2></div><p>Real deployments with the lure below the camera and solar power beside the station. Select any photo to enlarge it.</p></div>
+            <div class="field-gallery">
+              <figure class="field-figure"><button class="field-photo" data-photo="woodland" aria-label="Enlarge woodland field setup"><img src="media/field-woodland.jpg" width="2200" height="1650" alt="BeeCam in a wooded setting, with the weatherproof camera box above the blue vane and patterned platform, mounted to a T-post beside a solar unit." loading="lazy"><span class="photo-enlarge" aria-hidden="true">↗ Enlarge</span></button><figcaption><strong>The camera and lure</strong><span>The downward-facing camera is centred over the blue vane and imaging platform.</span></figcaption></figure>
+              <figure class="field-figure"><button class="field-photo" data-photo="solar" aria-label="Enlarge solar-powered field setup"><img src="media/field-solar.jpg" width="2200" height="1650" alt="BeeCam deployed on a wooded slope, with a solar panel and battery assembly alongside the camera station." loading="lazy"><span class="photo-enlarge" aria-hidden="true">↗ Enlarge</span></button><figcaption><strong>Power at the station</strong><span>A solar panel and battery supply the camera during field deployments.</span></figcaption></figure>
+            </div>
+            <div class="field-kit">
+              <div><span class="eyebrow">MOUNT</span><h3>T-post + two clamps</h3><p>The aluminum stem is secured to a post driven into the ground.</p></div>
+              <div><span class="eyebrow">ALIGN</span><h3>Camera above the lure</h3><p>The lens faces down over the vane, stopper inserts and patterned platform.</p></div>
+              <div><span class="eyebrow">POWER</span><h3>Solar + battery</h3><p>A 50 W panel and 18 Ah battery feed the camera through a 5 V USB-C converter. A V75 battery is a lighter alternative.</p></div>
+            </div>
+          </section>
+          <section class="field-section" id="field-images" aria-labelledby="field-images-title">
+            <div class="field-section-heading"><div><p class="eyebrow">04 / THROUGH THE CAMERA</p><h2 id="field-images-title">A visit becomes an observation</h2></div><p>The camera records the platform from above. These are real images from the camera.</p></div>
+            <div class="field-camera-gallery">
+              <figure class="field-figure"><button class="field-photo" data-photo="visitor" aria-label="Enlarge camera view of an insect visitor"><img src="media/camera-visitor.jpg" width="2200" height="1649" alt="Camera view looking down across the crossed blue vanes and bullseye-patterned platform, with an insect on a stopper insert." loading="lazy"><span class="photo-enlarge" aria-hidden="true">↗ Enlarge</span></button><figcaption><strong>A visitor on the imaging surface</strong><span>The patterned inserts between the vanes block the opening through the trap.</span></figcaption></figure>
+              <figure class="field-figure field-tag-photo"><button class="field-photo" data-photo="tag" aria-label="Enlarge camera crop of a bee with an ArUco tag"><img src="media/camera-aruco.png" width="279" height="272" alt="Close-up camera image of a bee with a small square ArUco marker on its back." loading="lazy"><span class="photo-enlarge" aria-hidden="true">↗ Enlarge</span></button><figcaption><strong>A tagged bee</strong><span>The small square on its back is an ArUco marker: a printed pattern that identifies the tag in an image.</span><small>Camera crop · 279 × 272 pixels</small></figcaption></figure>
+            </div>
+            <div class="field-movement">
+              <div><p class="eyebrow">FROM INDIVIDUALS TO MOVEMENT</p><h3>Recognising the same bee again</h3><p>In our population study, bees carried ArUco tags so that repeat sightings could be linked to individuals. Matching a readable tag across camera locations and times helps us study how bees move across the landscape.</p></div>
+              <div class="field-sightings" aria-label="Illustration: the same tag photographed at station A and later at station B indicates movement between those stations."><div><span class="station-symbol" aria-hidden="true">A</span><strong>First sighting</strong><span>Tag + location + time</span></div><span class="sighting-arrow" aria-hidden="true">→</span><div><span class="station-symbol" aria-hidden="true">B</span><strong>Later sighting</strong><span>Same tag, another station</span></div><p>Illustrative example. Sightings show visits at stations; they do not reveal the bee’s exact route between them.</p></div>
+            </div>
+          </section>
+          <section class="field-section field-questions" id="field-questions" aria-labelledby="field-questions-title">
+            <div class="field-section-heading"><div><p class="eyebrow">05 / QUESTIONS</p><h2 id="field-questions-title">Questions about BeeCam</h2></div><p>Open a question to explore the design and what the observations can tell us.</p></div>
+            <details open><summary>Does BeeCam catch or kill the bees?</summary><p>BeeCam is designed for non-lethal observation. The acrylic stopper inserts close the drop through the blue vane trap, and there is no collection jar underneath. Visitors can land, be photographed and leave.</p></details>
+            <details><summary>Why use a blue vane?</summary><p>The blue panels act as a visual lure. Blue vane traps are used to sample wild bees; here we use that attraction to bring bumble bees into the camera’s view. The lure is not exclusive to bumble bees, so other insects can appear in the images too.</p></details>
+            <details><summary>Is the tiny square a tracker?</summary><p>It is an ArUco marker, a printed visual identifier. The camera must see the marker clearly enough to read it. The tag does not transmit a radio signal or GPS position.</p></details>
+            <details><summary>How does a photograph tell us about movement?</summary><p>A readable marker links a sighting to a tagged individual. When that individual is photographed at another station later, the two records show movement between the known camera locations. They do not show every stop or the route in between.</p></details>
+            <details><summary>Do all visitors need tags?</summary><p>No. The camera can photograph tagged and untagged visitors. Tags let us connect sightings to particular individuals. An unreadable tag cannot reliably establish identity, and a camera only records visits that occur in view while it is taking images.</p></details>
+            <details><summary>How does the camera stay powered outdoors?</summary><p>The field setup uses a solar panel with a rechargeable battery and a converter supplying 5 V through USB-C. The Witty Pi board manages the operating schedule. A smaller Voltaic V75 battery can also power the camera; runtime depends on the schedule and operating conditions.</p></details>
+            <div class="field-reading"><strong>Explore further</strong><a href="https://www.bluevanetraps.com/" target="_blank" rel="noopener">Blue vane trap supplier ↗</a><a href="https://docs.opencv.org/4.x/d5/dae/tutorial_aruco_detection.html" target="_blank" rel="noopener">How ArUco markers work ↗</a><button data-view="explore">Explore the 3D assembly →</button></div>
+          </section>
+        </div>
       </section>
       <aside class="detail-panel" aria-live="polite"><p class="eyebrow" id="detail-eyebrow">ASSEMBLY DETAILS</p><h2 id="detail-title">Aluminum frame</h2><p class="detail-description" id="detail-description">The structural skeleton of the camera trap: one vertical stem, a U-shaped platform support, and an upper mounting arm.</p><div id="detail-stats" class="detail-stats"></div><div id="detail-actions"></div><div class="detail-bottom"><p class="eyebrow">MODEL NOTES</p><p>Use the DXFs for custom acrylic and manufacturer specifications for purchased components. The 3D model simplifies mouldings, board details and cable routes. Upper-arm height is adjustable. The blue vane trap is purchased prebuilt.</p></div></aside>
     </div>
     <footer><span>BeeCam / Open camera-trap hardware · v1.0</span><a href="https://github.com/newgend2/beecam-design" target="_blank" rel="noopener">Source & reuse ↗</a></footer>
   </main>
+  <dialog id="field-photo-dialog" aria-labelledby="field-photo-title" aria-describedby="field-photo-caption">
+    <div class="field-dialog-bar"><span id="field-photo-counter"></span><button id="field-photo-close" autofocus aria-label="Close enlarged photo">Close <span aria-hidden="true">×</span></button></div>
+    <div class="field-dialog-image"><img id="field-photo-full" alt=""></div>
+    <div class="field-dialog-bottom"><button id="field-photo-prev" aria-label="Previous photo">←</button><div><h2 id="field-photo-title"></h2><p id="field-photo-caption"></p></div><button id="field-photo-next" aria-label="Next photo">→</button></div>
+  </dialog>
   <noscript><p>This viewer requires JavaScript. <a href="downloads/camera-materials.csv">Download the materials list</a> or <a href="drawings/assembly.svg">open the frame drawing</a>.</p></noscript>
 </body>
 </html>

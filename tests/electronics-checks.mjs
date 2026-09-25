@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {existsSync} from 'node:fs';
 import * as THREE from '../docs/vendor/three.module.js';
 import {addEnclosure} from '../docs/js/enclosure-model.js';
-import {parts,electronicsParameters as E,enclosureParameters as P} from '../docs/js/data.js';
+import {parts,electronicsParameters as E,enclosureParameters as P,aiCameraParameters as A} from '../docs/js/data.js';
 import G from '../docs/js/enclosure-geometry.js';
 const scene=new THREE.Scene(),groups=[];
 const api=addEnclosure({partGroup(id,pos,explode){const g=new THREE.Group();g.position.fromArray(pos);g.userData={id,base:new THREE.Vector3(...pos),explode:new THREE.Vector3(...explode)};scene.add(g);groups.push(g);return g;},mesh(geometry,material,parent,pos=[0,0,0]){const m=new THREE.Mesh(geometry,material);m.position.fromArray(pos);parent.add(m);return m;},bolt(){},addLabel(){}});
@@ -30,6 +30,36 @@ for(const id of ['piStandoffs','rtcStandoffs'])for(const post of get(id).childre
  assert.ok(G.internal.holes.some(h=>Math.hypot(h.center[0]-x,h.center[1]-v)<.0001),`${id}: hole ${x},${v}`);
 }
 assert.ok(get('wittyStandoffs').children.every(m=>m.position.z>0),'Tall supports only opposite OLED');
+// Regression: cable leaves the inward-facing camera edge, never the outer hole row.
+const camera=get('aiCamera'),socket=camera.getObjectByName('camera-csi-socket');
+const endpoints=get('csiCable').userData.endpoints;
+near(socket.position.z-socket.geometry.parameters.depth/2,14.5-23.862);
+near(endpoints.camera[2]-camera.position.z,14.5-23.862);
+near(endpoints.camera[1]-camera.position.y,1.12+2.75/2);
+const ribbonMesh=get('csiCable').children.find(m=>m.geometry.type==='BufferGeometry');
+const positions=ribbonMesh.geometry.attributes.position;
+near((positions.getZ(0)+positions.getZ(1))/2,endpoints.camera[2]);
+assert.ok(positions.getZ(2)<positions.getZ(0),'Ribbon must first travel inward out of the camera socket');
+const pi=get('piZero'),piSocket=pi.getObjectByName('pi-csi-socket');
+near(endpoints.pi[2]-pi.position.z,-32.5);
+near(piSocket.position.z-piSocket.geometry.parameters.depth/2,-32.5);
+// Optical axis and mounting holes stay registered while camera body changes.
+near(A.lensFromOuterEdge,14.5);near(A.holeDiameter,2.2);near(A.pcbThickness,1.12);
+const cameraPCB=camera.children.find(m=>m.geometry.type==='ExtrudeGeometry');
+const boardBounds=new THREE.Box3().setFromBufferAttribute(cameraPCB.geometry.attributes.position);
+near(boardBounds.max.x-boardBounds.min.x,25);near(boardBounds.max.z-boardBounds.min.z,23.862);
+for(const h of G.internal.holes.filter(h=>h.radius===1)){
+ const expectedZ=h.center[1]-G.lidPorts.camera.center[1];
+ assert.ok(camera.children.some(m=>m.position.z===expectedZ&&m.position.y===A.pcbThickness));
+}
+// The Witty board is imported geometry, with the source's USB shell and component solids.
+const cadMeshes=get('wittyPi').children.filter(m=>m.name.startsWith('witty-step-'));
+assert.equal(cadMeshes.length,4);
+assert.ok(cadMeshes.reduce((n,m)=>n+m.geometry.index.count/3,0)>10000);
+const cadBounds=new THREE.Box3();cadMeshes.forEach(m=>cadBounds.union(new THREE.Box3().setFromBufferAttribute(m.geometry.attributes.position)));
+assert.ok(Math.abs(cadBounds.min.z+32.511)<.02&&Math.abs(cadBounds.max.x-15.896)<.02,'Manufacturer STEP transformed to installed board coordinates');
+// USB centres are 41.4 / 54 mm from the SD end in the official Pi drawing.
+assert.deepEqual(E.piUSBFromLeft,[41.4,54]);near(E.piHDMIFromLeft,12.4);
 scene.updateMatrixWorld(true);
 // Principal boards fit below the closed shell back, and remain within side walls.
 for(const id of ['piZero','wittyPi','qwiicHat','oled','rtc','stackHeader','csiCable','jstCables']){

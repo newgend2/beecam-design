@@ -81,15 +81,38 @@ that fit around both members.
 Acrylic outlines and hole positions follow the design DXFs. Inch-based source
 geometry is converted at 25.4 mm/in. Use the DXFs for custom acrylic cutting and
 manufacturer specifications for fit-critical checks on purchased parts.
-The 3D model simplifies extrusion slots, castings, enclosure mouldings, board
+The Witty Pi PCB and 184 component solids use UUGear’s STEP geometry; its
+fitted GPIO socket and display colours are added separately. The AI Camera
+follows the manufacturer physical specification, with its CSI connector facing
+the plate centre. The Pi Zero 2 W follows Raspberry Pi’s mechanical drawing,
+including the USB and HDMI positions; its components remain reference geometry.
+The 3D model simplifies extrusion slots, castings, enclosure mouldings, other board
 components and cable routing. It illustrates assembly; it is not manufacturing
 CAD for purchased parts. No blue vane fabrication drawings are provided.
 
 `docs/js/data.js` is the shared source for parts, dimensions and procurement
 quantities. Generators produce the SVG drawings and CSV/Markdown downloads.
 Native CAD and reference photos remain unchanged in ignored private storage.
-Public assets contain geometry-only DXFs and sanitized artwork. Original CAD
+To regenerate the Witty mesh, run `scripts/export-witty-mesh.py` with FreeCAD’s
+Python and `FREECAD_LIB` set to its library directory; pass the vendor STEP path.
+Web assets contain geometry-only DXFs, sanitized artwork and curated photo copies. Original CAD
 notices are retained in the normalized exports.
+
+## Field setup panel
+
+The **Field setup** tab (`#field`) introduces the blue vane visual lure, the
+earlier flower-shaped prototypes, the non-lethal adaptation, solar-powered field stations, camera images and ArUco
+re-sightings. Section links and expandable questions support a short presentation.
+Select a photo to enlarge it; use the arrow buttons or left/right keys to move
+between photos and Escape to close. The tagged-bee crop retains its original
+279 × 272 pixels. The movement example is illustrative, not a study result.
+
+Original photographs remain in ignored private storage. Browser copies in
+`docs/media/` have orientation applied and metadata removed, with no retouching
+or cropping. The six reviewed copies are recorded by checksum in
+`scripts/field-media-manifest.json`; the privacy audit rejects unknown or changed
+raster files and metadata-bearing headers. New photo copies require the same
+review before updating that manifest.
 
 ## Preview
 
